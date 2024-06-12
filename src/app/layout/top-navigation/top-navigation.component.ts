@@ -31,7 +31,7 @@ export class TopNavigationComponent {
   openSettingsDialog(): void {
     // const dialogRef = 
       this.dialog.open(SettingsDialogComponent, {
-        width: '250px',
+        width: '50%',
         data: { yamlUrl: 'https://github.com/valor-labs/valor-jobs/blob/dev/data_compiled/all_positions.yaml' }
       });
 
@@ -48,7 +48,7 @@ export class TopNavigationComponent {
 
   openExportDialog(): void {
     const dialogRef = this.dialog.open(ExportDialogComponent, {
-      width: '500px'
+      width: '50%'
     });
 
     dialogRef.afterClosed().subscribe(result => {

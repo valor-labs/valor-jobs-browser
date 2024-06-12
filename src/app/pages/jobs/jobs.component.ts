@@ -7,6 +7,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { NgFor, NgIf } from '@angular/common';
 // import { JobsService } from '../../services/jobs.service';
 import { SharedService } from '../../services/shared.service';
+import { Subscription } from 'rxjs';
 
 interface JobNode {
   name: string;
@@ -63,6 +64,8 @@ export class JobsComponent implements OnInit {
 
   selectedJob: ExampleFlatNode | null = null;
 
+  yamlContentSub?: Subscription;
+
   constructor(
     // private jobsService: JobsService,
     private sharedStateService: SharedService
@@ -72,8 +75,12 @@ export class JobsComponent implements OnInit {
     this.loadJobs()
   }
 
+  ngOnDestroy(): void {
+    this.yamlContentSub?.unsubscribe();
+  }
+
   loadJobs(): void {
-    this.sharedStateService.yamlContent$.subscribe((data:any) => {
+    this.yamlContentSub = this.sharedStateService.yamlContent$.subscribe((data:any) => {
       if (data && data.list) {
         this.dataSource.data = this.parseJobsData(data.list);
       }

@@ -1,3 +1,8 @@
 .left-menu {
   border-right: 1px solid #c4c6d0;
 }
+
+.left-menu .active-link {
+  background-color: rgba(46, 47, 48, 0.1); /* Highlight color */
+  font-weight: bold; /* Optional: make the text bold */
+}
