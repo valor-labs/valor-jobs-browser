@@ -1,0 +1,25 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Valor Jobs & Qualifications</span>
+  <span class="spacer"></span>
+  
+  <div class="right-buttons">
+    <div class="toggle-container">
+      <mat-slide-toggle (change)="toggleEditMode($event)">Edit mode</mat-slide-toggle>
+    </div>
+    <div class="button-container">
+      <button mat-button (click)="openSettingsDialog()">
+        <mat-icon>settings</mat-icon>
+        <span class="button-text">Settings</span>
+      </button>
+    </div>
+    <div class="button-container">
+      <button mat-button (click)="openExportDialog()">
+        <mat-icon>upload</mat-icon>
+        <span class="button-text">Export</span>
+      </button>
+    </div>
+  </div>
+</mat-toolbar>

@@ -1,6 +1,6 @@
-# ValorGrowth
+# Valor Jobs & Qualifications browser
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.3.
+Angular version 18
 
 ## Development server
 

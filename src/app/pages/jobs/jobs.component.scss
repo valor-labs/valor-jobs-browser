@@ -1,0 +1,19 @@
+.jobs-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.jobs-tree {
+  width: 30%;
+}
+
+.conditions, .qualifications {
+  width: 30%;
+}
+
+.qualifications a {
+  display: block;
+  margin-top: 10px;
+}

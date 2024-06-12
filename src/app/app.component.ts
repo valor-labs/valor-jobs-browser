@@ -1,10 +1,28 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { ContentComponent } from './layout/content/content.component';
+import { TopNavigationComponent } from './layout/top-navigation/top-navigation.component';
+import { LeftMenuComponent } from './layout/left-menu/left-menu.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [
+    ContentComponent,
+    TopNavigationComponent,
+    LeftMenuComponent,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule,
+    MatIconModule,
+    MatButtonModule,
+    RouterModule,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

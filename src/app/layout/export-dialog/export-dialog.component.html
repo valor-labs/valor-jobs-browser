@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Export</h1>
+<mat-dialog-content>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Export Data</mat-label>
+    <textarea matInput [(ngModel)]="exportData"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()" cdkFocusInitial>Cancel</button>
+</div>
