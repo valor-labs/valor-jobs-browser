@@ -1,0 +1,10 @@
+<div class="qualifications">
+  <h2>Qualifications</h2>
+  <div *ngFor="let qualification of selectedJob?.jobObject?.qualifications_criteria; let i = index">
+    <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.qualifications_criteria[i].name" placeholder="Qualification Name" />
+    <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.qualifications_criteria[i].level" placeholder="Level" />
+    <p *ngIf="!editMode">{{ qualification.name }}: Level {{ qualification.level }}</p>
+    <button *ngIf="editMode" (click)="removeQualification(i)">Remove</button>
+  </div>
+  <button *ngIf="editMode" (click)="addQualification()">Add Qualification</button>
+</div>

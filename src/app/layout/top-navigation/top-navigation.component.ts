@@ -25,6 +25,7 @@ export class TopNavigationComponent {
 
   toggleEditMode(event: MatSlideToggleChange): void {
     this.editMode = event.checked;
+    console.log("Toggling edit mode:", this.editMode); // Add logging here
     this.sharedService.setEditMode(this.editMode);
   }
 

@@ -2,18 +2,21 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 20px;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
 }
 
-.jobs-tree {
-  width: 30%;
+.jobs-column {
+  flex: 1;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
-.conditions, .qualifications {
-  width: 30%;
-}
-
-.qualifications a {
-  display: block;
-  margin-top: 10px;
+.jobs-tree,
+.experiences,
+.qualifications {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }

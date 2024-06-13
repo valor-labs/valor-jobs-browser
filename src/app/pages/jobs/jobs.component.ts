@@ -1,24 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTreeModule } from '@angular/material/tree';
-import { NgFor, NgIf } from '@angular/common';
-// import { JobsService } from '../../services/jobs.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SharedService } from '../../services/shared.service';
 import { Subscription } from 'rxjs';
-
-interface JobNode {
-  name: string;
-  children?: JobNode[];
-  jobObject?: any;
-}
-
-interface ExampleFlatNode extends JobNode {
-  expandable: boolean;
-  level: number;
-}
+import { ChangeDetectorRef } from '@angular/core';
+import { JobsTreeComponent } from './jobs-tree/jobs-tree.component';
+import { JobsExperienceComponent } from './jobs-experience/jobs-experience.component';
+import { JobsQualificationsComponent } from './jobs-qualifications/jobs-qualifications.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-jobs',
@@ -26,104 +13,35 @@ interface ExampleFlatNode extends JobNode {
   styleUrls: ['./jobs.component.scss'],
   standalone: true,
   imports: [
-    MatIconModule,
-    MatButtonModule,
-    MatTreeModule,
-    NgFor,
+    JobsTreeComponent,
+    JobsExperienceComponent,
+    JobsQualificationsComponent,
     NgIf
   ],
-  providers: [
-    // JobsService,
-    SharedService
-  ]
+  providers: [SharedService]
 })
-export class JobsComponent implements OnInit {
-  private _transformer = (node: JobNode, level: number): ExampleFlatNode => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-      jobObject: node.jobObject,
-      children: node.children
-    };
-  };
+export class JobsComponent implements OnInit, OnDestroy {
+  selectedJob: any = null;
+  editMode: boolean = false;
 
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
-    node => node.level,
-    node => node.expandable,
-  );
+  editModeSub?: Subscription;
 
-  treeFlattener = new MatTreeFlattener(
-    this._transformer,
-    node => node.level,
-    node => node.expandable,
-    node => node.children,
-  );
-
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-  selectedJob: ExampleFlatNode | null = null;
-
-  yamlContentSub?: Subscription;
-
-  constructor(
-    // private jobsService: JobsService,
-    private sharedStateService: SharedService
-  ) {}
+  constructor(private sharedService: SharedService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.loadJobs()
+    console.log("Setting up edit mode subscription");
+    this.editModeSub = this.sharedService.editMode$.subscribe((data: any) => {
+      console.log("Getting editMode", data);
+      this.editMode = data;
+      this.cdr.detectChanges();
+    });
   }
 
   ngOnDestroy(): void {
-    this.yamlContentSub?.unsubscribe();
+    this.editModeSub?.unsubscribe();
   }
 
-  loadJobs(): void {
-    this.yamlContentSub = this.sharedStateService.yamlContent$.subscribe((data:any) => {
-      if (data && data.list) {
-        this.dataSource.data = this.parseJobsData(data.list);
-      }
-    });
+  onJobSelected(job: any): void {
+    this.selectedJob = job;
   }
-
-
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
-
-  onNodeClick(node: ExampleFlatNode): void {
-    if (!node.expandable) {
-      console.log("Clicked node", node);
-      this.selectedJob = node;
-    }
-  }
-
-  private parseJobsData(data: any[]): JobNode[] {
-    const tracks: { [key: string]: JobNode } = {};
-
-    data.forEach(item => {
-      const track = item.track;
-      const title = item.title;
-      const seniorityTitle = `${item.seniority} ${item.position}`;
-
-      if (!tracks[track]) {
-        tracks[track] = {
-          name: track, children: []
-        };
-      }
-
-      let titleNode = tracks[track].children?.find(child => child.name === title);
-      if (!titleNode) {
-        titleNode = { name: title, children: [] };
-        tracks[track].children?.push(titleNode);
-      }
-
-      titleNode.children?.push({
-        name: seniorityTitle,
-        jobObject: item
-       });
-    });
-
-    return Object.values(tracks);
-  }
-
 }
