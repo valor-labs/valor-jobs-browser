@@ -9,11 +9,13 @@ import { DOCUMENT } from '@angular/common';
   providedIn: 'root'
 })
 export class SharedService {
-  private defaultYamlUrl = 'https://raw.githubusercontent.com/valor-labs/valor-jobs/dev/data_compiled/all_positions.yaml';
+  private defaultYamlUrl =    'https://raw.githubusercontent.com/valor-labs/valor-jobs/dev/data_compiled/all_positions.yaml';
+  private qualificationsUrl = 'https://raw.githubusercontent.com/valor-labs/valor-jobs/dev/data_compiled/all_qualifications.yaml';
 
   private editModeSubject = new BehaviorSubject<boolean>(false);
   private yamlUrlSubject = new BehaviorSubject<string>(this.defaultYamlUrl);
   private yamlContentSubject = new BehaviorSubject<any>(null);
+  private qualificationsContentSubject = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient, @Inject(DOCUMENT) private document: Document) {
     const savedUrl = this.getLocalStorageItem('yamlUrl');
@@ -23,6 +25,8 @@ export class SharedService {
     } else {
       this.fetchYamlData(this.defaultYamlUrl).subscribe();
     }
+
+    this.fetchQualificationsData(this.qualificationsUrl).subscribe();
   }
 
   get editMode$(): Observable<boolean> {
@@ -30,7 +34,7 @@ export class SharedService {
   }
 
   setEditMode(editMode: boolean): void {
-    console.log("Setting edit mode:", editMode); // Add logging here
+    console.log("Setting edit mode:", editMode);
     this.editModeSubject.next(editMode);
   }
 
@@ -48,14 +52,29 @@ export class SharedService {
     return this.yamlContentSubject.asObservable();
   }
 
+  get qualificationsContent$(): Observable<any> {
+    return this.qualificationsContentSubject.asObservable();
+  }
+
   updateJobContent(jobContent: any): void {
     this.yamlContentSubject.next(jobContent);
+  }
+
+  updateQualificationsContent(qualificationsContent: any): void {
+    this.qualificationsContentSubject.next(qualificationsContent);
   }
 
   private fetchYamlData(url: string): Observable<any> {
     return this.http.get(url, { responseType: 'text' }).pipe(
       map(yamlText => yaml.load(yamlText)),
       tap(data => this.yamlContentSubject.next(data))
+    );
+  }
+
+  private fetchQualificationsData(url: string): Observable<any> {
+    return this.http.get(url, { responseType: 'text' }).pipe(
+      map(yamlText => yaml.load(yamlText)),
+      tap(data => this.qualificationsContentSubject.next(data))
     );
   }
 

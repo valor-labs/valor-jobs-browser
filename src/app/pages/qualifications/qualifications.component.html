@@ -1,0 +1,6 @@
+<div class="qualifications-container">
+  <app-qualifications-tree (qualificationSelected)="onQualificationSelected($event)"></app-qualifications-tree>
+  <app-qualifications-knowledge [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualifications-knowledge>
+  <app-qualifications-dependency [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualifications-dependency>
+  <app-qualifications-materials [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualifications-materials>
+</div>

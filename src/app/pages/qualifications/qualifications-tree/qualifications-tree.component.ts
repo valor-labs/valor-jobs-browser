@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,21 +8,21 @@ import { SharedService } from '../../../services/shared.service';
 import { Subscription } from 'rxjs';
 import { NgFor, NgIf } from '@angular/common';
 
-interface JobNode {
+interface QualificationNode {
   name: string;
-  children?: JobNode[];
-  jobObject?: any;
+  children?: QualificationNode[];
+  qualificationObject?: any;
 }
 
-interface ExampleFlatNode extends JobNode {
+interface ExampleFlatNode extends QualificationNode {
   expandable: boolean;
   level: number;
 }
 
 @Component({
-  selector: 'app-jobs-tree',
-  templateUrl: './jobs-tree.component.html',
-  styleUrls: ['./jobs-tree.component.scss'],
+  selector: 'app-qualifications-tree',
+  templateUrl: './qualifications-tree.component.html',
+  styleUrls: ['./qualifications-tree.component.scss'],
   standalone: true,
   imports: [
     MatIconModule,
@@ -33,13 +32,13 @@ interface ExampleFlatNode extends JobNode {
     NgIf
   ],
 })
-export class JobsTreeComponent implements OnInit, OnDestroy {
-  private _transformer = (node: JobNode, level: number): ExampleFlatNode => {
+export class QualificationsTreeComponent implements OnInit, OnDestroy {
+  private _transformer = (node: QualificationNode, level: number): ExampleFlatNode => {
     return {
       expandable: !!node.children && node.children.length > 0,
       name: node.name,
       level: level,
-      jobObject: node.jobObject,
+      qualificationObject: node.qualificationObject,
       children: node.children
     };
   };
@@ -58,58 +57,55 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-  @Output() jobSelected = new EventEmitter<ExampleFlatNode>();
+  @Output() qualificationSelected = new EventEmitter<ExampleFlatNode>();
 
-  yamlContentSub?: Subscription;
+  qualificationsContentSub?: Subscription;
 
-  constructor(private sharedService: SharedService, private router: Router) {}
+  constructor(private sharedService: SharedService) {}
 
   ngOnInit(): void {
-    this.yamlContentSub = this.sharedService.yamlContent$.subscribe((data: any) => {
+    this.qualificationsContentSub = this.sharedService.qualificationsContent$.subscribe((data: any) => {
       if (data && data.list) {
-        this.dataSource.data = this.parseJobsData(data.list);
+        this.dataSource.data = this.parseQualificationsData(data.list);
       }
     });
   }
 
   ngOnDestroy(): void {
-    this.yamlContentSub?.unsubscribe();
+    this.qualificationsContentSub?.unsubscribe();
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   onNodeClick(node: ExampleFlatNode): void {
     if (!node.expandable) {
-      const job = node.jobObject;
-      this.router.navigate(['/jobs', job.track, job.title, job.seniority]);
-      this.jobSelected.emit(node);
+      this.qualificationSelected.emit(node);
     }
   }
 
-  private parseJobsData(data: any[]): JobNode[] {
-    const tracks: { [key: string]: JobNode } = {};
+  private parseQualificationsData(data: any[]): QualificationNode[] {
+    const tracks: { [key: string]: QualificationNode } = {};
 
     data.forEach(item => {
-      const track = item.track;
       const title = item.title;
-      const seniorityTitle = `${item.seniority} ${item.position}`;
+      const levelTitle = `${item.title}: ${item.level}`;
 
-      if (!tracks[track]) {
-        tracks[track] = {
-          name: track, children: []
+      if (!tracks[title]) {
+        tracks[title] = {
+          name: title, children: []
         };
       }
 
-      let titleNode = tracks[track].children?.find(child => child.name === title);
-      if (!titleNode) {
-        titleNode = { name: title, children: [] };
-        tracks[track].children?.push(titleNode);
+      let levelNode = tracks[title].children?.find(child => child.name === levelTitle);
+      if (!levelNode) {
+        levelNode = { name: levelTitle, children: [] };
+        tracks[title].children?.push(levelNode);
       }
 
-      titleNode.children?.push({
-        name: seniorityTitle,
-        jobObject: item
-       });
+      levelNode.children?.push({
+        name: levelTitle,
+        qualificationObject: item
+      });
     });
 
     return Object.values(tracks);

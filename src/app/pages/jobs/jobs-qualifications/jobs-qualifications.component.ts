@@ -12,8 +12,7 @@ import { SharedService } from '../../../services/shared.service';
     NgFor,
     NgIf,
     FormsModule
-  ],
-  providers: [SharedService]
+  ]
 })
 export class JobsQualificationsComponent {
   @Input() selectedJob: any;

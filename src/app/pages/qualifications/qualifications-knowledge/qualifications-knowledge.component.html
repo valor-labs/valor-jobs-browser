@@ -1,0 +1,9 @@
+<div class="knowledge">
+  <h2>Knowledge</h2>
+  <div *ngFor="let knowledge of selectedQualification?.knowledge; let i = index">
+    <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i)">{{ knowledge }}</div>
+    <p *ngIf="!editMode">{{ knowledge }}</p>
+    <button *ngIf="editMode" (click)="removeKnowledge(i)">Remove</button>
+  </div>
+  <button *ngIf="editMode" (click)="addKnowledge()">Add Knowledge</button>
+</div>

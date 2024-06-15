@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { SharedService } from '../../../services/shared.service';
+import { ContenteditableDirective } from '../../../directives/contenteditable.directive';
 
 @Component({
   selector: 'app-jobs-experience',
@@ -9,9 +9,8 @@ import { SharedService } from '../../../services/shared.service';
   styleUrls: ['./jobs-experience.component.scss'],
   standalone: true,
   imports: [
-    NgFor,
-    NgIf,
-    FormsModule
+    CommonModule,
+    ContenteditableDirective // Import the standalone directive
   ],
   providers: [SharedService]
 })
@@ -31,6 +30,13 @@ export class JobsExperienceComponent {
   removeExperience(index: number): void {
     if (this.selectedJob) {
       this.selectedJob.jobObject.experience.splice(index, 1);
+      this.updateJobContent();
+    }
+  }
+
+  updateExperience(content: string, index: number): void {
+    if (this.selectedJob) {
+      this.selectedJob.jobObject.experience[index] = content;
       this.updateJobContent();
     }
   }

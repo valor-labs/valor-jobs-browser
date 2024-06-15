@@ -1,8 +1,11 @@
 <div class="experiences">
   <h2>Experience</h2>
   <div *ngFor="let experience of selectedJob?.jobObject?.experience; let i = index">
-    <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.experience[i]" />
-    <p *ngIf="!editMode">{{ experience }}</p>
+    <div 
+      [appContenteditable]="editMode" 
+      (contentChange)="updateExperience($event, i)">
+      {{ experience }}
+    </div>
     <button *ngIf="editMode" (click)="removeExperience(i)">Remove</button>
   </div>
   <button *ngIf="editMode" (click)="addExperience()">Add Experience</button>
