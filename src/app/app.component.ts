@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ContentComponent } from './layout/content/content.component';
 import { TopNavigationComponent } from './layout/top-navigation/top-navigation.component';
 import { LeftMenuComponent } from './layout/left-menu/left-menu.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,7 @@ import { LeftMenuComponent } from './layout/left-menu/left-menu.component';
     MatIconModule,
     MatButtonModule,
     RouterModule,
+    CommonModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

@@ -1,5 +1,13 @@
+
 .jobs-tree {
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  .mat-tree-node {
+    &.selected {
+      background-color: #e0e0e0;
+      border-left: 3px solid #3f51b5;
+    }
+  }
 }

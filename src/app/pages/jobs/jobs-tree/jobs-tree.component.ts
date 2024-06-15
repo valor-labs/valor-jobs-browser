@@ -6,8 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTreeModule } from '@angular/material/tree';
 import { SharedService } from '../../../services/shared.service';
-import { Subscription } from 'rxjs';
-import { NgFor, NgIf } from '@angular/common';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
 
 interface JobNode {
   name: string;
@@ -26,11 +27,10 @@ interface ExampleFlatNode extends JobNode {
   styleUrls: ['./jobs-tree.component.scss'],
   standalone: true,
   imports: [
+    CommonModule, // Import CommonModule
     MatIconModule,
     MatButtonModule,
-    MatTreeModule,
-    NgFor,
-    NgIf
+    MatTreeModule
   ],
 })
 export class JobsTreeComponent implements OnInit, OnDestroy {
@@ -60,16 +60,18 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
 
   @Output() jobSelected = new EventEmitter<ExampleFlatNode>();
 
-  private subscriptions: Subscription[] = [];
+  private destroy$ = new Subject<void>();
+  selectedNode: ExampleFlatNode | null = null;
 
   constructor(private sharedService: SharedService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.sharedService.yamlContent$.subscribe((data: any) => {
+    this.sharedService.yamlContent$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: any) => {
         if (data && data.list) {
           this.dataSource.data = this.parseJobsData(data.list);
-          this.route.params.subscribe(params => {
+          this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
             const track = params['track'];
             const title = params['title'];
             const seniority = params['seniority'];
@@ -78,12 +80,12 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
             }
           });
         }
-      })
-    );
+      });
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -91,6 +93,7 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
   onNodeClick(node: ExampleFlatNode): void {
     if (!node.expandable) {
       const job = node.jobObject;
+      this.selectedNode = node; // Track the selected node before navigating
       this.router.navigate(['/jobs', job.track, job.title, job.seniority]);
       this.jobSelected.emit(node);
     }
@@ -136,6 +139,10 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
       if (node.level === 2 && node.jobObject.seniority === seniority) {
         this.treeControl.expand(node);
         this.treeControl.expandDescendants(node);
+      }
+
+      if (node.jobObject?.track === track && node.jobObject?.title === title && node.jobObject?.seniority === seniority) {
+        this.selectedNode = node; // Track the selected node
       }
     });
   }

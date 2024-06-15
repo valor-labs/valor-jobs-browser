@@ -31,15 +31,12 @@ export class QualificationsComponent implements OnInit, OnDestroy {
   constructor(private sharedService: SharedService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    console.log("Setting up edit mode subscription");
     this.editModeSub = this.sharedService.editMode$.subscribe((data: boolean) => {
-      console.log("Getting editMode", data);
       this.editMode = data;
       this.cdr.detectChanges();
     });
 
     this.qualificationsSub = this.sharedService.qualificationsContent$.subscribe((data: any) => {
-      console.log("Getting qualifications data", data);
       this.selectedQualification = data.list[0]; // Initial selection
       this.cdr.detectChanges();
     });

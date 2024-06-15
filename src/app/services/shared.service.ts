@@ -34,7 +34,6 @@ export class SharedService {
   }
 
   setEditMode(editMode: boolean): void {
-    console.log("Setting edit mode:", editMode);
     this.editModeSubject.next(editMode);
   }
 
