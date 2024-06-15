@@ -24,8 +24,7 @@ export class JobsComponent implements OnInit, OnDestroy {
   selectedJob: any = null;
   editMode: boolean = false;
 
-  editModeSub?: Subscription;
-  routeSub?: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -34,43 +33,36 @@ export class JobsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.editModeSub = this.sharedService.editMode$.subscribe((data: any) => {
-      this.editMode = data;
-      this.cdr.detectChanges();
-    });
+    this.subscriptions.push(
+      this.sharedService.editMode$.subscribe((data: any) => {
+        this.editMode = data;
+        this.cdr.detectChanges();
+      })
+    );
 
-    this.routeSub = this.route.params.subscribe(params => {
-      const track = params['track'];
-      const title = params['title'];
-      const seniority = params['seniority'];
+    this.subscriptions.push(
+      this.route.params.subscribe(params => {
+        const track = params['track'];
+        const title = params['title'];
+        const seniority = params['seniority'];
 
-      if (track && title && seniority) {
-        this.loadJob(track, title, seniority);
-      }
-    });
+        if (track && title && seniority) {
+          this.loadJob(track, title, seniority);
+        }
+      })
+    );
   }
 
   ngOnDestroy(): void {
-    this.editModeSub?.unsubscribe();
-    this.routeSub?.unsubscribe();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   onJobSelected(job: any): void {
     this.selectedJob = job;
   }
 
-
-
-  /**
-   * 
-   * @todo Leaking subs!!!!
-   * 
-   * @param track 
-   * @param title 
-   * @param seniority 
-   */
   private loadJob(track: string, title: string, seniority: string): void {
-    this.sharedService.yamlContent$.subscribe((data: any) => {
+    const sub = this.sharedService.yamlContent$.subscribe((data: any) => {
       if (data && data.list) {
         const job = data.list.find((item: any) => 
           item.track === track && 
@@ -84,5 +76,7 @@ export class JobsComponent implements OnInit, OnDestroy {
         }
       }
     });
+
+    this.subscriptions.push(sub);
   }
 }

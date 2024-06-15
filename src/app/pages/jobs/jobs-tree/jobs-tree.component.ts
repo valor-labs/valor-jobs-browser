@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatIconModule } from '@angular/material/icon';
@@ -60,20 +60,30 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
 
   @Output() jobSelected = new EventEmitter<ExampleFlatNode>();
 
-  yamlContentSub?: Subscription;
+  private subscriptions: Subscription[] = [];
 
-  constructor(private sharedService: SharedService, private router: Router) {}
+  constructor(private sharedService: SharedService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.yamlContentSub = this.sharedService.yamlContent$.subscribe((data: any) => {
-      if (data && data.list) {
-        this.dataSource.data = this.parseJobsData(data.list);
-      }
-    });
+    this.subscriptions.push(
+      this.sharedService.yamlContent$.subscribe((data: any) => {
+        if (data && data.list) {
+          this.dataSource.data = this.parseJobsData(data.list);
+          this.route.params.subscribe(params => {
+            const track = params['track'];
+            const title = params['title'];
+            const seniority = params['seniority'];
+            if (track && title && seniority) {
+              this.expandTreeToNode(track, title, seniority);
+            }
+          });
+        }
+      })
+    );
   }
 
   ngOnDestroy(): void {
-    this.yamlContentSub?.unsubscribe();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -113,5 +123,20 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
     });
 
     return Object.values(tracks);
+  }
+
+  private expandTreeToNode(track: string, title: string, seniority: string): void {
+    this.treeControl.dataNodes.forEach(node => {
+      if (node.level === 0 && node.name === track) {
+        this.treeControl.expand(node);
+      }
+      if (node.level === 1 && node.name === title) {
+        this.treeControl.expand(node);
+      }
+      if (node.level === 2 && node.jobObject.seniority === seniority) {
+        this.treeControl.expand(node);
+        this.treeControl.expandDescendants(node);
+      }
+    });
   }
 }
