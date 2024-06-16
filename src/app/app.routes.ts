@@ -12,8 +12,9 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: '/jobs', pathMatch: 'full' },
       { path: 'jobs', component: JobsComponent },
-      { path: 'jobs/:track/:title/:seniority', component: JobsComponent }, // Add this dynamic route
+      { path: 'jobs/:track/:title/:seniority', component: JobsComponent },
       { path: 'qualifications', component: QualificationsComponent },
+      { path: 'qualifications/:category/:title/:level', component: QualificationsComponent }, // Add this dynamic route
       { path: 'profile', component: NotImplementedComponent },
       { path: '**', component: NotImplementedComponent }
     ]

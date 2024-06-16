@@ -12,7 +12,6 @@ import { ContenteditableDirective } from '../../../directives/contenteditable.di
     CommonModule,
     ContenteditableDirective // Import the standalone directive
   ],
-  providers: [SharedService]
 })
 export class JobsExperienceComponent {
   @Input() selectedJob: any;

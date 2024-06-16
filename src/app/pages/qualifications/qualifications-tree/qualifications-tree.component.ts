@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTreeModule } from '@angular/material/tree';
 import { SharedService } from '../../../services/shared.service';
-import { Subscription } from 'rxjs';
-import { NgFor, NgIf } from '@angular/common';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
 
 interface QualificationNode {
   name: string;
@@ -25,11 +27,10 @@ interface ExampleFlatNode extends QualificationNode {
   styleUrls: ['./qualifications-tree.component.scss'],
   standalone: true,
   imports: [
+    CommonModule, // Import CommonModule
     MatIconModule,
     MatButtonModule,
-    MatTreeModule,
-    NgFor,
-    NgIf
+    MatTreeModule
   ],
 })
 export class QualificationsTreeComponent implements OnInit, OnDestroy {
@@ -59,47 +60,65 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
 
   @Output() qualificationSelected = new EventEmitter<ExampleFlatNode>();
 
-  qualificationsContentSub?: Subscription;
+  private destroy$ = new Subject<void>();
+  selectedNode: ExampleFlatNode | null = null;
 
-  constructor(private sharedService: SharedService) {}
+  constructor(private sharedService: SharedService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.qualificationsContentSub = this.sharedService.qualificationsContent$.subscribe((data: any) => {
-      if (data && data.list) {
-        this.dataSource.data = this.parseQualificationsData(data.list);
-      }
-    });
+    this.sharedService.qualificationsContent$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: any) => {
+        if (data && data.list) {
+          this.dataSource.data = this.parseQualificationsData(data.list);
+          this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
+            const category = params['category'];
+            const title = params['title'];
+            const level = params['level'];
+            if (category && title && level) {
+              this.expandTreeToNode(category, title, level);
+            }
+          });
+        }
+      });
   }
 
   ngOnDestroy(): void {
-    this.qualificationsContentSub?.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   onNodeClick(node: ExampleFlatNode): void {
     if (!node.expandable) {
+      const qualification = node.qualificationObject;
+      this.selectedNode = node; // Track the selected node before navigating
+      this.router.navigate(['/qualifications', qualification.category, qualification.title, qualification.level]);
+      console.log("Tree clicked and emmited", node);
       this.qualificationSelected.emit(node);
     }
   }
 
   private parseQualificationsData(data: any[]): QualificationNode[] {
-    const tracks: { [key: string]: QualificationNode } = {};
+    const categories: { [key: string]: QualificationNode } = {};
 
     data.forEach(item => {
       const title = item.title;
-      const levelTitle = `${item.title}: ${item.level}`;
-
-      if (!tracks[title]) {
-        tracks[title] = {
-          name: title, children: []
+      const category = item.category;
+      const levelTitle = `${item.title}, Level: ${item.level}`;
+      
+      // root
+      if (!categories[category]) {
+        categories[category] = {
+          name: category, children: []
         };
       }
 
-      let levelNode = tracks[title].children?.find(child => child.name === levelTitle);
+      let levelNode = categories[category].children?.find(child => child.name === title);
       if (!levelNode) {
-        levelNode = { name: levelTitle, children: [] };
-        tracks[title].children?.push(levelNode);
+        levelNode = { name: title, children: [] };
+        categories[category].children?.push(levelNode);
       }
 
       levelNode.children?.push({
@@ -108,6 +127,30 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
       });
     });
 
-    return Object.values(tracks);
+    return Object.values(categories);
+  }
+
+  private expandTreeToNode(category: string, title: string, level: string): void {
+    this.treeControl.dataNodes.forEach(node => {
+      if (node.level === 0 && node.name === category) {
+        this.treeControl.expand(node);
+      }
+      if (node.level === 1 && node.name === title) {
+        this.treeControl.expand(node);
+      }
+      if (node.level === 2 && node.qualificationObject.level == level) {
+        this.treeControl.expand(node);
+        this.treeControl.expandDescendants(node);
+      }
+
+      // console.log("looking for node", category, title, level);
+      // console.log("node", node.qualificationObject?.category, node.qualificationObject?.title, node.qualificationObject?.level);
+      
+
+      if (node.qualificationObject?.category === category && node.qualificationObject?.title === title && node.qualificationObject?.level == level) {
+        console.log("tree: expandTreeToNode: node check", node);
+        this.selectedNode = node; // Track the selected node
+      }
+    });
   }
 }

@@ -20,6 +20,10 @@ export class QualificationsKnowledgeComponent {
 
   constructor(private sharedService: SharedService) {}
 
+  ngOnInit() {
+    console.log("on itin");
+  }
+
   addKnowledge(): void {
     if (this.selectedQualification) {
       this.selectedQualification.knowledge.push('');
