@@ -26,8 +26,7 @@ export class QualificationsComponent implements OnInit, OnDestroy {
   selectedQualification: any = null;
   editMode: boolean = false;
 
-  private subscriptions = new Subscription();
-  private list: any[] = [];
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -36,53 +35,46 @@ export class QualificationsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.subscriptions.add(
-      this.sharedService.editMode$.subscribe((data: boolean) => {
+    this.subscriptions.push(
+      this.sharedService.editMode$.subscribe((data: any) => {
         this.editMode = data;
         this.cdr.detectChanges();
       })
     );
 
-    this.subscriptions.add(
+    this.subscriptions.push(
       this.route.params.subscribe(params => {
         const category = params['category'];
         const title = params['title'];
         const level = params['level'];
 
         if (category && title && level) {
-          this.loadQualification(this.list, category, title, level);
-        }
-      })
-    );
-
-    this.subscriptions.add(
-      this.sharedService.qualificationsContent$.subscribe((data: any) => {
-        if (data && data.list) {
-          this.list = data.list;
+          this.subscriptions.push( this.sharedService.qualificationsContent$.subscribe((data: any) => {
+            if (data && data.list) {
+              const qualification = data.list.find((item: any) => 
+                item.category === category && 
+                item.title === title && 
+                item.level == level
+              );
+          
+              if (qualification) {
+                console.log("QualificationComponent, route event + content event")
+                this.selectedQualification = qualification;
+                this.cdr.detectChanges();
+              }
+            }
+          }));
         }
       })
     );
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   onQualificationSelected(qualification: any): void {
-    console.log("qualifications onQualificationSelected", qualification);
     this.selectedQualification = qualification;
   }
 
-  private loadQualification(list: any[], category: string, title: string, level: string): void {
-    const qualification = list.find((item: any) => 
-      item.category === category && 
-      item.title === title && 
-      item.level == level
-    );
-
-    if (qualification) {
-      this.selectedQualification = { qualificationObject: qualification };
-      this.cdr.detectChanges();
-    }
-  }
 }

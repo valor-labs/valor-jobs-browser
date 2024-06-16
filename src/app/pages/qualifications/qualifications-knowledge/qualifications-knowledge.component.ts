@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedService } from '../../../services/shared.service';
@@ -14,14 +14,17 @@ import { SharedService } from '../../../services/shared.service';
     FormsModule
   ]
 })
-export class QualificationsKnowledgeComponent {
+export class QualificationsKnowledgeComponent implements OnChanges {
   @Input() selectedQualification: any;
   @Input() editMode: boolean = false;
 
   constructor(private sharedService: SharedService) {}
 
-  ngOnInit() {
-    console.log("on itin");
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedQualification'] && this.selectedQualification) {
+      // this.knowledge = this.selectedQualification.qualificationObject.knowledge || [];
+      console.log("this.selectedQualification", this.selectedQualification);
+    }
   }
 
   addKnowledge(): void {

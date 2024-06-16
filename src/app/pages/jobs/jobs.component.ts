@@ -25,6 +25,8 @@ export class JobsComponent implements OnInit, OnDestroy {
   editMode: boolean = false;
 
   private subscriptions: Subscription[] = [];
+  private yamlContentSub?: Subscription;
+  private list: any[] = []
 
   constructor(
     private route: ActivatedRoute,
@@ -40,6 +42,7 @@ export class JobsComponent implements OnInit, OnDestroy {
       })
     );
 
+    
     this.subscriptions.push(
       this.route.params.subscribe(params => {
         const track = params['track'];
@@ -47,13 +50,18 @@ export class JobsComponent implements OnInit, OnDestroy {
         const seniority = params['seniority'];
 
         if (track && title && seniority) {
-          this.loadJob(track, title, seniority);
+          this.yamlContentSub?.unsubscribe();
+          this.yamlContentSub = this.sharedService.yamlContent$.subscribe((data: any) => {
+            this.list = data?.list;
+            this.loadJob(track, title, seniority);
+          });
         }
       })
     );
   }
 
   ngOnDestroy(): void {
+    this.yamlContentSub?.unsubscribe();
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
@@ -62,21 +70,16 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   private loadJob(track: string, title: string, seniority: string): void {
-    const sub = this.sharedService.yamlContent$.subscribe((data: any) => {
-      if (data && data.list) {
-        const job = data.list.find((item: any) => 
-          item.track === track && 
-          item.title === title && 
-          item.seniority === seniority
-        );
+    const job = this.list.find((item: any) => 
+      item.track === track && 
+      item.title === title && 
+      item.seniority === seniority
+    );
 
-        if (job) {
-          this.selectedJob = { jobObject: job };
-          this.cdr.detectChanges();
-        }
-      }
-    });
-
-    this.subscriptions.push(sub);
+    if (job) {
+      this.selectedJob = { jobObject: job };
+      this.cdr.detectChanges();
+    }
   }
+
 }

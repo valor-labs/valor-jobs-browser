@@ -95,8 +95,8 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
       const qualification = node.qualificationObject;
       this.selectedNode = node; // Track the selected node before navigating
       this.router.navigate(['/qualifications', qualification.category, qualification.title, qualification.level]);
-      console.log("Tree clicked and emmited", node);
-      this.qualificationSelected.emit(node);
+      console.log("Tree clicked and emmited", qualification);
+      this.qualificationSelected.emit(qualification);
     }
   }
 

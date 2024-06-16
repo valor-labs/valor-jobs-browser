@@ -1,9 +1,16 @@
 <div class="materials">
   <h2>Materials</h2>
-  <div *ngFor="let material of selectedQualification?.materials_and_topics; let i = index">
-    <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i)">{{ material }}</div>
-    <p *ngIf="!editMode">{{ material }}</p>
-    <button *ngIf="editMode" (click)="removeMaterial(i)">Remove</button>
-  </div>
+  <ul>
+    <li *ngFor="let material of selectedQualification?.materials_and_topics; let i = index">
+      
+      <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i)">{{ material }}</div>
+
+      <p *ngIf="!editMode">{{ material.title }}</p>
+      <p *ngIf="!editMode">{{ material.authors }}</p>
+      <p *ngIf="!editMode">{{ material.subjects }}</p>
+
+      <button *ngIf="editMode" (click)="removeMaterial(i)">Remove</button>
+    </li>
+  </ul>
   <button *ngIf="editMode" (click)="addMaterial()">Add Material</button>
 </div>

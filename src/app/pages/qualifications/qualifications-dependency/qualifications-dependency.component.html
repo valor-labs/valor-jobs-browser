@@ -1,10 +1,12 @@
 <div class="dependencies">
   <h2>Dependencies</h2>
-  <div *ngFor="let dependency of selectedQualification?.dependency; let i = index">
-    <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i, 'title')" placeholder="Dependency Title">{{ dependency.title }}</div>
-    <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i, 'level')" placeholder="Dependency Level">{{ dependency.level }}</div>
-    <p *ngIf="!editMode">{{ dependency.title }}: Level {{ dependency.level }}</p>
-    <button *ngIf="editMode" (click)="removeDependency(i)">Remove</button>
-  </div>
+  <ul>
+    <li *ngFor="let dependency of selectedQualification?.dependency; let i = index">
+      <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i, 'title')" placeholder="Dependency Title">{{ dependency.title }}</div>
+      <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i, 'level')" placeholder="Dependency Level">{{ dependency.level }}</div>
+      <p *ngIf="!editMode">{{ dependency.title }}: Level {{ dependency.level }}</p>
+      <button *ngIf="editMode" (click)="removeDependency(i)">Remove</button>
+    </li>
+  </ul>
   <button *ngIf="editMode" (click)="addDependency()">Add Dependency</button>
 </div>
