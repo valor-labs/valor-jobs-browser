@@ -30,4 +30,9 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent {
   title = 'valor-growth';
+  sidenavOpened: boolean = true;
+
+  menuToggled() {
+    this.sidenavOpened = !this.sidenavOpened;
+  }
 }

@@ -35,7 +35,6 @@ export class QualificationRedirectComponent implements OnInit {
               item.title === title && 
               item.level == level
             );
-            console.log("found?", data.list, title, level, qualification);
 
             if (qualification) {
               const category = qualification.category;

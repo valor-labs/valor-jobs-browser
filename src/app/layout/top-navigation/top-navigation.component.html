@@ -1,8 +1,10 @@
 <mat-toolbar color="primary" class="top-nav">
-  <button mat-icon-button>
+  <button mat-icon-button (click)="toggleMenu($event)">
     <mat-icon>menu</mat-icon>
   </button>
-  <img src="/assets/logo.png" alt="Logo" class="logo">
+  <a [routerLink]="['/']">
+    <img src="/assets/logo.png" alt="Logo" class="logo">
+  </a>
   <span>Jobs & Qualifications Browser</span>
   <span class="spacer"></span>
   

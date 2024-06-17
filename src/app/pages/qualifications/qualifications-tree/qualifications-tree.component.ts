@@ -97,7 +97,6 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
       const qualification = node.qualificationObject;
       this.selectedNode = node; // Track the selected node before navigating
       this.router.navigate(['/qualifications', qualification.category, qualification.title, qualification.level]);
-      console.log("Tree clicked and emmited", qualification);
       this.qualificationSelected.emit(qualification);
     }
   }
@@ -145,12 +144,7 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
         this.treeControl.expandDescendants(node);
       }
 
-      // console.log("looking for node", category, title, level);
-      // console.log("node", node.qualificationObject?.category, node.qualificationObject?.title, node.qualificationObject?.level);
-      
-
       if (node.qualificationObject?.category === category && node.qualificationObject?.title === title && node.qualificationObject?.level == level) {
-        console.log("tree: expandTreeToNode: node check", node);
         this.selectedNode = node; // Track the selected node
       }
     });

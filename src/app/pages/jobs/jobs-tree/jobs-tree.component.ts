@@ -106,7 +106,7 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
 
     data.forEach(item => {
       const track = item.track;
-      const title = item.title;
+      const position = item.position;
       const seniorityTitle = `${item.seniority} ${item.position}`;
 
       if (!tracks[track]) {
@@ -115,9 +115,9 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
         };
       }
 
-      let titleNode = tracks[track].children?.find(child => child.name === title);
+      let titleNode = tracks[track].children?.find(child => child.name === position);
       if (!titleNode) {
-        titleNode = { name: title, children: [] };
+        titleNode = { name: position, children: [] };
         tracks[track].children?.push(titleNode);
       }
 

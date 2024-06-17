@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule, MatMiniFabButton } from '@angular/material/button';
@@ -8,6 +8,7 @@ import { ExportDialogComponent } from '../export-dialog/export-dialog.component'
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { SharedService } from '../../services/shared.service';
 import { MatDividerModule } from '@angular/material/divider';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
@@ -15,11 +16,16 @@ import { MatDividerModule } from '@angular/material/divider';
   templateUrl: './top-navigation.component.html',
   styleUrls: ['./top-navigation.component.scss'],
   standalone: true,
-  imports: [MatDialogModule, MatSlideToggleModule, MatButtonModule, MatIconModule, MatToolbarModule, MatDividerModule]
+  imports: [MatDialogModule, MatSlideToggleModule, MatButtonModule, MatIconModule, MatToolbarModule, MatDividerModule, RouterModule]
 })
 export class TopNavigationComponent {
 
+  @Output() menuToggled = new EventEmitter();
   constructor(public dialog: MatDialog, private sharedService: SharedService) {}
+
+  toggleMenu(event: any) {
+    this.menuToggled.emit();
+  }
 
   toggleEditMode(event: MatSlideToggleChange): void {
     this.sharedService.setEditMode(event.checked);

@@ -1,9 +1,8 @@
-<app-top-navigation></app-top-navigation>
-
+<app-top-navigation  (menuToggled)="menuToggled()"></app-top-navigation>
 
 <!-- app.component.html -->
 <mat-sidenav-container class="example-container">
-  <mat-sidenav #sidenav mode="side" opened>
+  <mat-sidenav #sidenav mode="side" [(opened)]="sidenavOpened">
     <app-left-menu></app-left-menu>
   </mat-sidenav>
   

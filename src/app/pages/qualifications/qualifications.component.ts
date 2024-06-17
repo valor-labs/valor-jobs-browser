@@ -58,7 +58,6 @@ export class QualificationsComponent implements OnInit, OnDestroy {
               );
           
               if (qualification) {
-                console.log("QualificationComponent, route event + content event")
                 this.selectedQualification = qualification;
                 this.cdr.detectChanges();
               }

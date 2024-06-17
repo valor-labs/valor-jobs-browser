@@ -16,18 +16,11 @@ import { MatCardModule } from '@angular/material/card';
     MatCardModule
   ]
 })
-export class QualificationsKnowledgeComponent implements OnChanges {
+export class QualificationsKnowledgeComponent {
   @Input() selectedQualification: any;
   @Input() editMode: boolean = false;
 
   constructor(private sharedService: SharedService) {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['selectedQualification'] && this.selectedQualification) {
-      // this.knowledge = this.selectedQualification.qualificationObject.knowledge || [];
-      console.log("this.selectedQualification", this.selectedQualification);
-    }
-  }
 
   addKnowledge(): void {
     if (this.selectedQualification) {
