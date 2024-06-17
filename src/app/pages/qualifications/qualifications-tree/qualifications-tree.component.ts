@@ -9,6 +9,7 @@ import { SharedService } from '../../../services/shared.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 
 interface QualificationNode {
   name: string;
@@ -30,7 +31,8 @@ interface ExampleFlatNode extends QualificationNode {
     CommonModule, // Import CommonModule
     MatIconModule,
     MatButtonModule,
-    MatTreeModule
+    MatTreeModule,
+    MatCardModule
   ],
 })
 export class QualificationsTreeComponent implements OnInit, OnDestroy {

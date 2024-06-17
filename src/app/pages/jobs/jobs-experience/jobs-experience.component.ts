@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedService } from '../../../services/shared.service';
 import { ContenteditableDirective } from '../../../directives/contenteditable.directive';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-jobs-experience',
@@ -9,6 +10,7 @@ import { ContenteditableDirective } from '../../../directives/contenteditable.di
   styleUrls: ['./jobs-experience.component.scss'],
   standalone: true,
   imports: [
+    MatCardModule,
     CommonModule,
     ContenteditableDirective // Import the standalone directive
   ],

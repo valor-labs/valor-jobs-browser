@@ -7,16 +7,18 @@
   height: 100%;
 }
 
-.qualifications-column {
-  flex: 1;
+.tree {
+  flex: 0 0 400px; /* Fixed width for the tree */
   padding: 10px;
   box-sizing: border-box;
+  overflow-y: auto; /* Ensure it handles overflow if content is large */
 }
 
-.qualifications-tree,
-.experiences,
-.qualifications {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+.knowledge,
+.dependency,
+.materials {
+  flex: 1; /* Equal width for other columns */
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-y: auto; /* Ensure it handles overflow if content is large */
 }

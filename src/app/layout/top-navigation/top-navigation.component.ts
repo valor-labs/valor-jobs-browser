@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { SettingsDialogComponent } from '../settings-dialog/settings-dialog.component';
 import { ExportDialogComponent } from '../export-dialog/export-dialog.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { JobsComponent } from '../../pages/jobs/jobs.component';
 import { SharedService } from '../../services/shared.service';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -19,13 +18,11 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [MatDialogModule, MatSlideToggleModule, MatButtonModule, MatIconModule, MatToolbarModule, MatDividerModule]
 })
 export class TopNavigationComponent {
-  editMode = false;
 
   constructor(public dialog: MatDialog, private sharedService: SharedService) {}
 
   toggleEditMode(event: MatSlideToggleChange): void {
-    this.editMode = event.checked;
-    this.sharedService.setEditMode(this.editMode);
+    this.sharedService.setEditMode(event.checked);
   }
 
   openSettingsDialog(): void {
@@ -35,15 +32,6 @@ export class TopNavigationComponent {
         data: { yamlUrl: 'https://github.com/valor-labs/valor-jobs/blob/dev/data_compiled/all_positions.yaml' }
       });
 
-    // dialogRef.componentInstance.urlChanged.subscribe((newUrl: string) => {
-    //   // jobsComponent.loadJobs();
-    // });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     // The YAML URL has been updated in the shared service
-    //   }
-    // });
   }
 
   openExportDialog(): void {

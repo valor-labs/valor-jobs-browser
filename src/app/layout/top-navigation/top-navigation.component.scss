@@ -1,29 +1,26 @@
-.right-buttons {
+.top-nav {
   display: flex;
   align-items: center;
-}
 
-.spacer {
-  flex: 1 1 auto;
-}
+  .logo {
+    height: 40px; // Adjust as needed
+    margin-right: 16px;
+  }
 
-.toggle-container,
-.button-container {
-  display: flex;
-  align-items: center;
-  margin-left: 20px; /* Adjust as needed for spacing */
-}
+  .spacer {
+    flex: 1 1 auto;
+  }
 
-.button-container button {
-  display: flex;
-  align-items: center;
-}
+  .right-buttons {
+    display: flex;
+    align-items: center;
 
-.mat-slide-toggle-content {
-  display: flex;
-  align-items: center;
-}
+    .toggle-container {
+      margin-right: 16px;
+    }
 
-.button-text {
-  margin-left: 5px; /* Adjust as needed for spacing between icon and text */
+    .button-container {
+      margin-left: 8px;
+    }
+  }
 }

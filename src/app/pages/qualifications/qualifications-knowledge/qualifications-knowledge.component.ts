@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedService } from '../../../services/shared.service';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-qualifications-knowledge',
@@ -11,7 +12,8 @@ import { SharedService } from '../../../services/shared.service';
   imports: [
     NgFor,
     NgIf,
-    FormsModule
+    FormsModule,
+    MatCardModule
   ]
 })
 export class QualificationsKnowledgeComponent implements OnChanges {

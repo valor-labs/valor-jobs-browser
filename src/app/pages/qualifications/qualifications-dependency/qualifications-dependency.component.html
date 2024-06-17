@@ -1,12 +1,17 @@
-<div class="dependencies">
-  <h2>Dependencies</h2>
-  <ul>
-    <li *ngFor="let dependency of selectedQualification?.dependency; let i = index">
-      <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i, 'title')" placeholder="Dependency Title">{{ dependency.title }}</div>
-      <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i, 'level')" placeholder="Dependency Level">{{ dependency.level }}</div>
-      <p *ngIf="!editMode">{{ dependency.title }}: Level {{ dependency.level }}</p>
-      <button *ngIf="editMode" (click)="removeDependency(i)">Remove</button>
-    </li>
-  </ul>
-  <button *ngIf="editMode" (click)="addDependency()">Add Dependency</button>
-</div>
+<mat-card class="dependencies">
+  <mat-card-header>
+    <mat-card-title>Dependencies</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <ul>
+      <li *ngFor="let dependency of selectedQualification?.dependency; let i = index">
+        <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i, 'title')" placeholder="Dependency Title">{{ dependency.title }}</div>
+        <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i, 'level')" placeholder="Dependency Level">{{ dependency.level }}</div>
+        
+        <p *ngIf="!editMode">{{ dependency.title }}: Level {{ dependency.level }}</p>
+        <button *ngIf="editMode" (click)="removeDependency(i)">Remove</button>
+      </li>
+    </ul>
+    <button *ngIf="editMode" (click)="addDependency()">Add Dependency</button>
+  </mat-card-content>
+</mat-card>

@@ -1,10 +1,22 @@
-<div class="qualifications">
-  <h2>Qualifications</h2>
-  <div *ngFor="let qualification of selectedJob?.jobObject?.qualifications_criteria; let i = index">
-    <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.qualifications_criteria[i].name" placeholder="Qualification Name" />
-    <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.qualifications_criteria[i].level" placeholder="Level" />
-    <p *ngIf="!editMode">{{ qualification.name }}: Level {{ qualification.level }}</p>
-    <button *ngIf="editMode" (click)="removeQualification(i)">Remove</button>
-  </div>
-  <button *ngIf="editMode" (click)="addQualification()">Add Qualification</button>
-</div>
+<mat-card class="qualifications">
+  <mat-card-header>
+    <mat-card-title>Qualifications</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <ul>
+      <li *ngFor="let qualification of selectedJob?.jobObject?.qualifications_criteria; let i = index">
+        <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.qualifications_criteria[i].name" placeholder="Qualification Name" />
+        <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.qualifications_criteria[i].level" placeholder="Level" />
+        
+        <p *ngIf="!editMode">
+          <a [routerLink]="['/qualifications', qualification.name, qualification.level]">
+            {{ qualification.name }}: Level {{ qualification.level }}
+          </a>
+        </p>
+        
+        <button *ngIf="editMode" (click)="removeQualification(i)">Remove</button>
+      </li>
+    </ul>
+    <button *ngIf="editMode" (click)="addQualification()">Add Qualification</button>
+  </mat-card-content>
+</mat-card>

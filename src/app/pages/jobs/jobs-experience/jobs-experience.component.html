@@ -1,12 +1,18 @@
-<div class="experiences">
-  <h2>Experience</h2>
-  <div *ngFor="let experience of selectedJob?.jobObject?.experience; let i = index">
-    <div 
-      [appContenteditable]="editMode" 
-      (contentChange)="updateExperience($event, i)">
-      {{ experience }}
-    </div>
-    <button *ngIf="editMode" (click)="removeExperience(i)">Remove</button>
-  </div>
-  <button *ngIf="editMode" (click)="addExperience()">Add Experience</button>
-</div>
+<mat-card class="experiences">
+  <mat-card-header>
+    <mat-card-title>Experience</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <ul>
+      <li *ngFor="let experience of selectedJob?.jobObject?.experience; let i = index">
+        <div 
+          [appContenteditable]="editMode" 
+          (contentChange)="updateExperience($event, i)">
+          {{ experience }}
+        </div>
+        <button *ngIf="editMode" (click)="removeExperience(i)">Remove</button>
+      </li>
+    </ul>
+    <button *ngIf="editMode" (click)="addExperience()">Add Experience</button>
+  </mat-card-content>
+</mat-card>

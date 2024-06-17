@@ -6,6 +6,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { JobsTreeComponent } from './jobs-tree/jobs-tree.component';
 import { JobsExperienceComponent } from './jobs-experience/jobs-experience.component';
 import { JobsQualificationsComponent } from './jobs-qualifications/jobs-qualifications.component';
+import { MatCardModule } from '@angular/material/card';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -14,6 +15,7 @@ import { NgIf } from '@angular/common';
   styleUrls: ['./jobs.component.scss'],
   standalone: true,
   imports: [
+    MatCardModule,
     JobsTreeComponent,
     JobsExperienceComponent,
     JobsQualificationsComponent,
@@ -52,8 +54,12 @@ export class JobsComponent implements OnInit, OnDestroy {
         if (track && title && seniority) {
           this.yamlContentSub?.unsubscribe();
           this.yamlContentSub = this.sharedService.yamlContent$.subscribe((data: any) => {
-            this.list = data?.list;
-            this.loadJob(track, title, seniority);
+            if (data) {
+              this.list = data?.list;
+              this.loadJob(track, title, seniority);
+            } else {
+              console.warn("yamlContent event", data);
+            }
           });
         }
       })
@@ -70,7 +76,7 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   private loadJob(track: string, title: string, seniority: string): void {
-    const job = this.list.find((item: any) => 
+    const job = this.list?.find((item: any) => 
       item.track === track && 
       item.title === title && 
       item.seniority === seniority

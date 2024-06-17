@@ -1,16 +1,22 @@
-<div class="materials">
-  <h2>Materials</h2>
-  <ul>
-    <li *ngFor="let material of selectedQualification?.materials_and_topics; let i = index">
-      
-      <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i)">{{ material }}</div>
+<mat-card class="materials">
+  <mat-card-header>
+    <mat-card-title>Materials</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
 
-      <p *ngIf="!editMode">{{ material.title }}</p>
-      <p *ngIf="!editMode">{{ material.authors }}</p>
-      <p *ngIf="!editMode">{{ material.subjects }}</p>
+    <ul>
+      <li *ngFor="let material of selectedQualification?.materials_and_topics; let i = index">
+        
+        <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i)">{{ material }}</div>
 
-      <button *ngIf="editMode" (click)="removeMaterial(i)">Remove</button>
-    </li>
-  </ul>
-  <button *ngIf="editMode" (click)="addMaterial()">Add Material</button>
-</div>
+        <p *ngIf="!editMode">{{ material.title }}</p>
+        <p *ngIf="!editMode">{{ material.authors }}</p>
+        <p *ngIf="!editMode">{{ material.subjects }}</p>
+
+        <button *ngIf="editMode" (click)="removeMaterial(i)">Remove</button>
+      </li>
+    </ul>
+    <button *ngIf="editMode" (click)="addMaterial()">Add Material</button>
+  </mat-card-content>
+</mat-card>
+
