@@ -2,10 +2,14 @@
   <div class="jobs-column">
     <app-jobs-tree (jobSelected)="onJobSelected($event)"></app-jobs-tree>
   </div>
-  <div class="jobs-column">
+
+  <div class="experience-column" *ngIf="selectedJob">
     <app-jobs-experience [selectedJob]="selectedJob" [editMode]="editMode"></app-jobs-experience>
   </div>
-  <div class="jobs-column">
+  <div class="qualifications-column" *ngIf="selectedJob">
     <app-jobs-qualifications [selectedJob]="selectedJob" [editMode]="editMode"></app-jobs-qualifications>
+  </div>
+  <div class="nojobselected-column" *ngIf="!selectedJob">
+    Please select any position.
   </div>
 </div>

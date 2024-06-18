@@ -24,6 +24,9 @@ export class QualificationsMaterialsComponent {
 
   addMaterial(): void {
     if (this.selectedQualification) {
+      if (!this.selectedQualification.materials_and_topics) {
+        this.selectedQualification.materials_and_topics = [];
+      }
       this.selectedQualification.materials_and_topics.push('');
       this.updateQualificationsContent();
     }

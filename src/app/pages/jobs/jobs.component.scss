@@ -13,10 +13,28 @@
   box-sizing: border-box;
 }
 
-.jobs-tree,
-.experiences,
-.qualifications {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+.experience-column, .qualifications-column {
+  flex: 1;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.nojobselected-column {
+  flex: 2;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+@media screen and (min-width: 768px) {
+  .jobs-column {
+    flex: 1 1 33.33%;
+  }
+
+  .experience-column, .qualifications-column {
+    flex: 1 1 33.33%;
+  }
+
+  .nojobselected-column {
+    flex: 2 1 66.66%;
+  }
 }

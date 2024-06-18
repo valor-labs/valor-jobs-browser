@@ -24,6 +24,9 @@ export class QualificationsKnowledgeComponent {
 
   addKnowledge(): void {
     if (this.selectedQualification) {
+      if (!this.selectedQualification.knowledge) {
+        this.selectedQualification.knowledge = [];
+      }
       this.selectedQualification.knowledge.push('');
       this.updateQualificationsContent();
     }

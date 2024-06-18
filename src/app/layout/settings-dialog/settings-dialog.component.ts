@@ -30,7 +30,7 @@ export class SettingsDialogComponent {
   onSave(): void {
     const yamlUrl = this.form.value.yamlUrl;
     localStorage.setItem('yamlUrl', yamlUrl);
-    this.sharedStateService.setYamlUrl(yamlUrl);
+    this.sharedStateService.setJobsYamlUrl(yamlUrl);
     // this.urlChanged.emit(yamlUrl);
     this.dialogRef.close(yamlUrl);
   }

@@ -24,6 +24,9 @@ export class QualificationsDependencyComponent {
 
   addDependency(): void {
     if (this.selectedQualification) {
+      if (!this.selectedQualification.dependency) {
+        this.selectedQualification.dependency = [];
+      }
       this.selectedQualification.dependency.push({ title: '', level: '' });
       this.updateQualificationsContent();
     }

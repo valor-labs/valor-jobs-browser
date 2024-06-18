@@ -26,6 +26,9 @@ export class JobsQualificationsComponent {
 
   addQualification(): void {
     if (this.selectedJob) {
+      if (!this.selectedJob.jobObject.qualifications_criteria) {
+        this.selectedJob.jobObject.qualifications_criteria = [];
+      }
       this.selectedJob.jobObject.qualifications_criteria.push({ name: '', level: '' });
       this.updateJobContent();
     }
@@ -38,7 +41,26 @@ export class JobsQualificationsComponent {
     }
   }
 
+  updateQualification(content: any, index: number, field: string): void {
+    if (this.selectedJob) {
+      this.selectedJob.jobObject.qualifications_criteria[index][field] = content;
+      this.updateJobContent();
+    }
+  }
+
   private updateJobContent(): void {
-    this.sharedService.updateJobContent(this.selectedJob);
+    // Retrieve the current job list from the service
+    const currentJobs = this.sharedService.getCurrentJobsContent();
+    // Update the job in the list
+    const updatedJobs = currentJobs.list.map((job: any) => {
+      if (job.track === this.selectedJob.jobObject.track &&
+          job.title === this.selectedJob.jobObject.title &&
+          job.seniority === this.selectedJob.jobObject.seniority) {
+        return this.selectedJob.jobObject;
+      }
+      return job;
+    });
+    // Update the job list in the service
+    this.sharedService.updateJobsContent({ list: updatedJobs });
   }
 }

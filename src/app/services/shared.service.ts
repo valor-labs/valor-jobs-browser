@@ -9,24 +9,32 @@ import { DOCUMENT } from '@angular/common';
   providedIn: 'root'
 })
 export class SharedService {
-  private defaultYamlUrl =    'https://raw.githubusercontent.com/valor-labs/valor-jobs/dev/data_compiled/all_positions.yaml';
-  private qualificationsUrl = 'https://raw.githubusercontent.com/valor-labs/valor-jobs/dev/data_compiled/all_qualifications.yaml';
+  private defaultJobsYamlUrl = 'https://raw.githubusercontent.com/valor-labs/valor-jobs/dev/data_compiled/all_positions.yaml';
+  private defaultQualificationsYamlUrl = 'https://raw.githubusercontent.com/valor-labs/valor-jobs/dev/data_compiled/all_qualifications.yaml';
 
   private editModeSubject = new BehaviorSubject<boolean>(false);
-  private yamlUrlSubject = new BehaviorSubject<string>(this.defaultYamlUrl);
-  private yamlContentSubject = new BehaviorSubject<any>(null);
+  private jobsYamlUrlSubject = new BehaviorSubject<string>(this.defaultJobsYamlUrl);
+  private qualificationsYamlUrlSubject = new BehaviorSubject<string>(this.defaultQualificationsYamlUrl);
+  private jobsContentSubject = new BehaviorSubject<any>(null);
   private qualificationsContentSubject = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient, @Inject(DOCUMENT) private document: Document) {
-    const savedUrl = this.getLocalStorageItem('yamlUrl');
-    if (savedUrl) {
-      this.yamlUrlSubject.next(savedUrl);
-      this.fetchYamlData(savedUrl).subscribe();
+    const savedJobsUrl = this.getLocalStorageItem('jobsYamlUrl');
+    const savedQualificationsUrl = this.getLocalStorageItem('qualificationsYamlUrl');
+    
+    if (savedJobsUrl) {
+      this.jobsYamlUrlSubject.next(savedJobsUrl);
+      this.fetchYamlData(savedJobsUrl).subscribe(data => this.jobsContentSubject.next(data));
     } else {
-      this.fetchYamlData(this.defaultYamlUrl).subscribe();
+      this.fetchYamlData(this.defaultJobsYamlUrl).subscribe(data => this.jobsContentSubject.next(data));
     }
 
-    this.fetchQualificationsData(this.qualificationsUrl).subscribe();
+    if (savedQualificationsUrl) {
+      this.qualificationsYamlUrlSubject.next(savedQualificationsUrl);
+      this.fetchYamlData(savedQualificationsUrl).subscribe(data => this.qualificationsContentSubject.next(data));
+    } else {
+      this.fetchYamlData(this.defaultQualificationsYamlUrl).subscribe(data => this.qualificationsContentSubject.next(data));
+    }
   }
 
   get editMode$(): Observable<boolean> {
@@ -37,43 +45,49 @@ export class SharedService {
     this.editModeSubject.next(editMode);
   }
 
-  get yamlUrl$(): Observable<string> {
-    return this.yamlUrlSubject.asObservable();
+  get jobsYamlUrl$(): Observable<string> {
+    return this.jobsYamlUrlSubject.asObservable();
   }
 
-  setYamlUrl(url: string): void {
-    this.setLocalStorageItem('yamlUrl', url);
-    this.yamlUrlSubject.next(url);
-    this.fetchYamlData(url).subscribe();
+  setJobsYamlUrl(url: string): void {
+    this.setLocalStorageItem('jobsYamlUrl', url);
+    this.jobsYamlUrlSubject.next(url);
+    this.fetchYamlData(url).subscribe(data => this.jobsContentSubject.next(data));
   }
 
-  get yamlContent$(): Observable<any> {
-    return this.yamlContentSubject.asObservable();
+  get qualificationsYamlUrl$(): Observable<string> {
+    return this.qualificationsYamlUrlSubject.asObservable();
+  }
+
+  setQualificationsYamlUrl(url: string): void {
+    this.setLocalStorageItem('qualificationsYamlUrl', url);
+    this.qualificationsYamlUrlSubject.next(url);
+    this.fetchYamlData(url).subscribe(data => this.qualificationsContentSubject.next(data));
+  }
+
+  get jobsContent$(): Observable<any> {
+    return this.jobsContentSubject.asObservable();
   }
 
   get qualificationsContent$(): Observable<any> {
     return this.qualificationsContentSubject.asObservable();
   }
 
-  updateJobContent(jobContent: any): void {
-    this.yamlContentSubject.next(jobContent);
+  updateJobsContent(jobsContent: any): void {
+    this.jobsContentSubject.next(jobsContent);
   }
 
   updateQualificationsContent(qualificationsContent: any): void {
     this.qualificationsContentSubject.next(qualificationsContent);
   }
 
-  private fetchYamlData(url: string): Observable<any> {
-    return this.http.get(url, { responseType: 'text' }).pipe(
-      map(yamlText => yaml.load(yamlText)),
-      tap(data => this.yamlContentSubject.next(data))
-    );
+  getCurrentJobsContent(): any {
+    return this.jobsContentSubject.value;
   }
 
-  private fetchQualificationsData(url: string): Observable<any> {
+  private fetchYamlData(url: string): Observable<any> {
     return this.http.get(url, { responseType: 'text' }).pipe(
-      map(yamlText => yaml.load(yamlText)),
-      tap(data => this.qualificationsContentSubject.next(data))
+      map(yamlText => yaml.load(yamlText))
     );
   }
 

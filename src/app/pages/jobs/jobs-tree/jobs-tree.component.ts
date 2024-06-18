@@ -68,7 +68,7 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
   constructor(private sharedService: SharedService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.sharedService.yamlContent$
+    this.sharedService.jobsContent$
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: any) => {
         if (data && data.list) {

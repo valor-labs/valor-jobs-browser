@@ -22,7 +22,7 @@ export class ExportDialogComponent {
 
 
   ngOnInit() {
-    this.yamlContentSub = this.sharedService.yamlContent$.subscribe((data:any) => {
+    this.yamlContentSub = this.sharedService.jobsContent$.subscribe((data:any) => {
       this.exportData = yaml.dump(data);
     });
   }

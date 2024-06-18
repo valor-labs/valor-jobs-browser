@@ -1,7 +1,7 @@
 .qualifications-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: stretch;
   width: 100%;
   height: 100%;
@@ -14,11 +14,33 @@
   overflow-y: auto; /* Ensure it handles overflow if content is large */
 }
 
-.knowledge,
-.dependency,
-.materials {
-  flex: 1; /* Equal width for other columns */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px;
+  flex: 1;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.knowledge, .dependency, .materials {
   padding: 10px;
   box-sizing: border-box;
   overflow-y: auto; /* Ensure it handles overflow if content is large */
+}
+
+.noqualification-column {
+  flex: 1;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+@media screen and (min-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  .noqualification-column {
+    flex: 3;
+  }
 }

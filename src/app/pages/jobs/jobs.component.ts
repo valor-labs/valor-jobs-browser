@@ -27,7 +27,6 @@ export class JobsComponent implements OnInit, OnDestroy {
   editMode: boolean = false;
 
   private subscriptions: Subscription[] = [];
-  private yamlContentSub?: Subscription;
   private list: any[] = []
 
   constructor(
@@ -44,30 +43,23 @@ export class JobsComponent implements OnInit, OnDestroy {
       })
     );
 
-    
     this.subscriptions.push(
-      this.route.params.subscribe(params => {
-        const track = params['track'];
-        const title = params['title'];
-        const seniority = params['seniority'];
-
-        if (track && title && seniority) {
-          this.yamlContentSub?.unsubscribe();
-          this.yamlContentSub = this.sharedService.yamlContent$.subscribe((data: any) => {
-            if (data) {
-              this.list = data?.list;
-              this.loadJob(track, title, seniority);
-            } else {
-              console.warn("yamlContent event", data);
-            }
-          });
+      this.sharedService.jobsContent$.subscribe((data: any) => {
+        if (data) {
+          this.list = data.list;
+          const params = this.route.snapshot.params;
+          const track = params['track'];
+          const title = params['title'];
+          const seniority = params['seniority'];
+          if (track && title && seniority) {
+            this.loadJob(track, title, seniority);
+          }
         }
       })
     );
   }
 
   ngOnDestroy(): void {
-    this.yamlContentSub?.unsubscribe();
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
@@ -76,7 +68,7 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   private loadJob(track: string, title: string, seniority: string): void {
-    const job = this.list?.find((item: any) => 
+    const job = this.list.find((item: any) => 
       item.track === track && 
       item.title === title && 
       item.seniority === seniority
@@ -88,4 +80,57 @@ export class JobsComponent implements OnInit, OnDestroy {
     }
   }
 
+  addCriteria(): void {
+    if (this.selectedJob) {
+      this.selectedJob.jobObject.criteria.push('');
+      this.updateJobContent();
+    }
+  }
+
+  removeCriteria(index: number): void {
+    if (this.selectedJob) {
+      this.selectedJob.jobObject.criteria.splice(index, 1);
+      this.updateJobContent();
+    }
+  }
+
+  addExperience(): void {
+    if (this.selectedJob) {
+      this.selectedJob.jobObject.experience.push('');
+      this.updateJobContent();
+    }
+  }
+
+  removeExperience(index: number): void {
+    if (this.selectedJob) {
+      this.selectedJob.jobObject.experience.splice(index, 1);
+      this.updateJobContent();
+    }
+  }
+
+  addQualification(): void {
+    if (this.selectedJob) {
+      this.selectedJob.jobObject.qualifications_criteria.push({ name: '', level: '' });
+      this.updateJobContent();
+    }
+  }
+
+  removeQualification(index: number): void {
+    if (this.selectedJob) {
+      this.selectedJob.jobObject.qualifications_criteria.splice(index, 1);
+      this.updateJobContent();
+    }
+  }
+
+  private updateJobContent(): void {
+    const updatedList = this.list.map(item => {
+      if (item.track === this.selectedJob.jobObject.track &&
+          item.title === this.selectedJob.jobObject.title &&
+          item.seniority === this.selectedJob.jobObject.seniority) {
+        return this.selectedJob.jobObject;
+      }
+      return item;
+    });
+    this.sharedService.updateJobsContent({ list: updatedList });
+  }
 }
