@@ -1,4 +1,8 @@
 .qualifications-tree {
+  mat-card-content {
+    padding-top: 16px;
+  }
+  
   .mat-tree-node {
     &.selected {
       background-color: #e0e0e0;

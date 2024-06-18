@@ -3,6 +3,9 @@
     <app-qualifications-tree (qualificationSelected)="onQualificationSelected($event)"></app-qualifications-tree>
   </div>
   <div class="grid-container" *ngIf="selectedQualification">
+    <div class="details">
+      <app-qualification-details [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualification-details>
+    </div>
     <div class="knowledge">
       <app-qualifications-knowledge [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualifications-knowledge>
     </div>

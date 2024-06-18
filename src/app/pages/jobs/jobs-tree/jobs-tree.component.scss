@@ -3,6 +3,17 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  
+
+  mat-card-content {
+    padding-top: 16px;
+  }
+
+  button {
+    text-align: left;
+    justify-content: flex-start;
+  }
+
 
   .mat-tree-node {
     &.selected {

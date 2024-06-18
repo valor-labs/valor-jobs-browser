@@ -15,32 +15,37 @@
 }
 
 .grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  display: block;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
   gap: 10px;
   flex: 1;
   padding: 10px;
   box-sizing: border-box;
 }
 
-.knowledge, .dependency, .materials {
+.knowledge, .dependency, .materials, .details {
+  float: left;
   padding: 10px;
   box-sizing: border-box;
   overflow-y: auto; /* Ensure it handles overflow if content is large */
+  width: 100%;
 }
 
-.noqualification-column {
-  flex: 1;
-  padding: 10px;
-  box-sizing: border-box;
-}
+// .noqualification-column {
+//   flex: 1;
+//   padding: 10px;
+//   box-sizing: border-box;
+// }
 
 @media screen and (min-width: 768px) {
-  .grid-container {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  .knowledge, .dependency, .materials, .details {
+    width: 50%;
   }
+  // .grid-container {
+  //   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  // }
 
-  .noqualification-column {
-    flex: 3;
-  }
+  // .noqualification-column {
+  //   flex: 3;
+  // }
 }

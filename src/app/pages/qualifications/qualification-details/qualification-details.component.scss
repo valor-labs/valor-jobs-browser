@@ -1,16 +1,16 @@
-.job-details {
+.qualification-details {
+
   mat-card-content {
     padding-top: 16px;
   }
-
-  .job-detail {
+  
+  .qualification-detail {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
 
     label {
       flex: 0 0 100px;
-      // font-weight: bold;
     }
 
     div, input {

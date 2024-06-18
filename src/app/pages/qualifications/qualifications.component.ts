@@ -7,6 +7,7 @@ import { QualificationsTreeComponent } from './qualifications-tree/qualification
 import { QualificationsKnowledgeComponent } from './qualifications-knowledge/qualifications-knowledge.component';
 import { QualificationsDependencyComponent } from './qualifications-dependency/qualifications-dependency.component';
 import { QualificationsMaterialsComponent } from './qualifications-materials/qualifications-materials.component';
+import { QualificationDetailsComponent } from './qualification-details/qualification-details.component';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -19,6 +20,7 @@ import { NgIf } from '@angular/common';
     QualificationsKnowledgeComponent,
     QualificationsDependencyComponent,
     QualificationsMaterialsComponent,
+    QualificationDetailsComponent,
     NgIf
   ],
 })

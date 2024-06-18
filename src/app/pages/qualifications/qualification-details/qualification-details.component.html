@@ -1,0 +1,22 @@
+<mat-card class="qualification-details">
+  <mat-card-header>
+    <mat-card-title>Qualification Details</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="qualification-detail">
+      <label>Title:</label>
+      <div *ngIf="!editMode">{{ selectedQualification?.title }}</div>
+      <input *ngIf="editMode" [(ngModel)]="selectedQualification.title" />
+    </div>
+    <div class="qualification-detail">
+      <label>Category:</label>
+      <div *ngIf="!editMode">{{ selectedQualification?.category }}</div>
+      <input *ngIf="editMode" [(ngModel)]="selectedQualification.category" />
+    </div>
+    <div class="qualification-detail">
+      <label>Level:</label>
+      <div *ngIf="!editMode">{{ selectedQualification?.level }}</div>
+      <input *ngIf="editMode" [(ngModel)]="selectedQualification.level" />
+    </div>
+  </mat-card-content>
+</mat-card>
