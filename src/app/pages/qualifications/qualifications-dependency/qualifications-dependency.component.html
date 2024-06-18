@@ -5,10 +5,15 @@
   <mat-card-content>
     <ul>
       <li *ngFor="let dependency of selectedQualification?.dependency; let i = index">
-        <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i, 'title')" placeholder="Dependency Title">{{ dependency.title }}</div>
-        <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i, 'level')" placeholder="Dependency Level">{{ dependency.level }}</div>
-        
-        <p *ngIf="!editMode">{{ dependency.title }}: Level {{ dependency.level }}</p>
+        <input *ngIf="editMode" [(ngModel)]="dependency.title" placeholder="Dependent on Qualification" />
+        <input *ngIf="editMode" [(ngModel)]="dependency.level" placeholder="Level" />
+
+        <p *ngIf="!editMode">
+          <a [routerLink]="['/qualifications', dependency.title, dependency.level]">
+            {{ dependency.title }}: Level {{ dependency.level }}
+          </a>
+        </p>
+
         <button *ngIf="editMode" (click)="removeDependency(i)">Remove</button>
       </li>
     </ul>

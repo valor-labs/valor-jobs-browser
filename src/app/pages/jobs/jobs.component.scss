@@ -1,40 +1,49 @@
 .jobs-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: stretch;
   width: 100%;
   height: 100%;
 }
 
 .jobs-column {
-  flex: 1;
+  flex: 0 0 300px; /* Fixed width for the tree */
   padding: 10px;
   box-sizing: border-box;
+  overflow-y: auto; /* Ensure it handles overflow if content is large */
 }
 
-.experience-column, .qualifications-column {
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-auto-rows: minmax(100px, auto);
+  gap: 10px;
   flex: 1;
   padding: 10px;
   box-sizing: border-box;
+  grid-auto-flow: row dense;
+}
+
+.details-column, .experience-column, .qualifications-column {
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-y: auto; /* Ensure it handles overflow if content is large */
+  height: 100%;
 }
 
 .nojobselected-column {
-  flex: 2;
+  flex: 1;
   padding: 10px;
   box-sizing: border-box;
 }
 
 @media screen and (min-width: 768px) {
-  .jobs-column {
-    flex: 1 1 33.33%;
-  }
-
-  .experience-column, .qualifications-column {
-    flex: 1 1 33.33%;
+  .grid-container {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
 
   .nojobselected-column {
-    flex: 2 1 66.66%;
+    flex: 3;
   }
 }

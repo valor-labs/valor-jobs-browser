@@ -72,6 +72,7 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: any) => {
         if (data && data.list) {
+          console.log("QualificationsTree: data.list", data.list);
           this.dataSource.data = this.parseQualificationsData(data.list);
           this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
             const category = params['category'];

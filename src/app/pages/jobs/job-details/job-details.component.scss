@@ -1,0 +1,20 @@
+.job-details {
+  mat-card-content {
+    padding-top: 16px;
+  }
+
+  .job-detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    label {
+      flex: 0 0 100px;
+      font-weight: bold;
+    }
+
+    div, input {
+      flex: 1;
+    }
+  }
+}

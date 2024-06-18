@@ -41,12 +41,12 @@ export class JobsQualificationsComponent {
     }
   }
 
-  updateQualification(content: any, index: number, field: string): void {
-    if (this.selectedJob) {
-      this.selectedJob.jobObject.qualifications_criteria[index][field] = content;
-      this.updateJobContent();
-    }
-  }
+  // updateQualification(content: any, index: number, field: string): void {
+  //   if (this.selectedJob) {
+  //     this.selectedJob.jobObject.qualifications_criteria[index][field] = content;
+  //     this.updateJobContent();
+  //   }
+  // }
 
   private updateJobContent(): void {
     // Retrieve the current job list from the service

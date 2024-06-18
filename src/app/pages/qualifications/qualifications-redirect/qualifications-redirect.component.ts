@@ -36,6 +36,7 @@ export class QualificationRedirectComponent implements OnInit {
               item.level == level
             );
 
+            console.log("qualification found:", qualification)
             if (qualification) {
               const category = qualification.category;
               this.router.navigate(['/qualifications', category, title, level]);

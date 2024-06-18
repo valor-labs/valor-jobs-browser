@@ -3,6 +3,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedService } from '../../../services/shared.service';
 import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-qualifications-dependency',
@@ -13,7 +14,8 @@ import { MatCardModule } from '@angular/material/card';
     NgFor,
     NgIf,
     FormsModule,
-    MatCardModule
+    MatCardModule,
+    RouterModule
   ]
 })
 export class QualificationsDependencyComponent {
@@ -44,6 +46,7 @@ export class QualificationsDependencyComponent {
     this.selectedQualification.dependency[index][field] = target.innerText;
     this.updateQualificationsContent();
   }
+
 
   private updateQualificationsContent(): void {
     this.sharedService.updateQualificationsContent(this.selectedQualification);

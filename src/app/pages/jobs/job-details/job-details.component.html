@@ -1,0 +1,32 @@
+<mat-card class="job-details">
+  <mat-card-header>
+    <mat-card-title>Job Details</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="job-detail">
+      <label>Title:</label>
+      <div *ngIf="!editMode">{{ selectedJob?.jobObject?.title }}</div>
+      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.title" />
+    </div>
+    <div class="job-detail">
+      <label>Track:</label>
+      <div *ngIf="!editMode">{{ selectedJob?.jobObject?.track }}</div>
+      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.track" />
+    </div>
+    <div class="job-detail">
+      <label>Position:</label>
+      <div *ngIf="!editMode">{{ selectedJob?.jobObject?.position }}</div>
+      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.position" />
+    </div>
+    <div class="job-detail">
+      <label>Category:</label>
+      <div *ngIf="!editMode">{{ selectedJob?.jobObject?.category }}</div>
+      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.category" />
+    </div>
+    <div class="job-detail">
+      <label>Seniority:</label>
+      <div *ngIf="!editMode">{{ selectedJob?.jobObject?.seniority }}</div>
+      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.seniority" />
+    </div>
+  </mat-card-content>
+</mat-card>

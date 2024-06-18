@@ -6,6 +6,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { JobsTreeComponent } from './jobs-tree/jobs-tree.component';
 import { JobsExperienceComponent } from './jobs-experience/jobs-experience.component';
 import { JobsQualificationsComponent } from './jobs-qualifications/jobs-qualifications.component';
+import { JobDetailsComponent } from './job-details/job-details.component';
 import { MatCardModule } from '@angular/material/card';
 import { NgIf } from '@angular/common';
 
@@ -19,6 +20,7 @@ import { NgIf } from '@angular/common';
     JobsTreeComponent,
     JobsExperienceComponent,
     JobsQualificationsComponent,
+    JobDetailsComponent,
     NgIf
   ],
 })
