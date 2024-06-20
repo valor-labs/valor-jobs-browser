@@ -6,27 +6,27 @@
     <div class="job-detail">
       <label>Title:</label>
       <div *ngIf="!editMode">{{ selectedJob?.jobObject?.title }}</div>
-      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.title" />
+      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.title" (ngModelChange)="onFieldChange('title', $event)" />
     </div>
     <div class="job-detail">
       <label>Track:</label>
       <div *ngIf="!editMode">{{ selectedJob?.jobObject?.track }}</div>
-      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.track" />
+      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.track" (ngModelChange)="onFieldChange('track', $event)" />
     </div>
     <div class="job-detail">
       <label>Position:</label>
       <div *ngIf="!editMode">{{ selectedJob?.jobObject?.position }}</div>
-      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.position" />
+      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.position" (ngModelChange)="onFieldChange('position', $event)" />
     </div>
     <div class="job-detail">
       <label>Category:</label>
       <div *ngIf="!editMode">{{ selectedJob?.jobObject?.category }}</div>
-      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.category" />
+      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.category" (ngModelChange)="onFieldChange('category', $event)" />
     </div>
     <div class="job-detail">
       <label>Seniority:</label>
       <div *ngIf="!editMode">{{ selectedJob?.jobObject?.seniority }}</div>
-      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.seniority" />
+      <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.seniority" (ngModelChange)="onFieldChange('seniority', $event)" />
     </div>
   </mat-card-content>
 </mat-card>

@@ -1,6 +1,6 @@
 <div class="jobs-container">
   <div class="jobs-column">
-    <app-jobs-tree (jobSelected)="onJobSelected($event)"></app-jobs-tree>
+    <app-jobs-tree [jobsList]="list" (jobSelected)="onJobSelected($event)"></app-jobs-tree>
   </div>
 
   <div class="grid-container" *ngIf="selectedJob">

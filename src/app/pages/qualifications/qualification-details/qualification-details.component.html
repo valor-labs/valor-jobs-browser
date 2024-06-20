@@ -6,17 +6,17 @@
     <div class="qualification-detail">
       <label>Title:</label>
       <div *ngIf="!editMode">{{ selectedQualification?.title }}</div>
-      <input *ngIf="editMode" [(ngModel)]="selectedQualification.title" />
+      <input *ngIf="editMode" [(ngModel)]="selectedQualification.title" (ngModelChange)="onFieldChange('title', $event)"/>
     </div>
     <div class="qualification-detail">
       <label>Category:</label>
       <div *ngIf="!editMode">{{ selectedQualification?.category }}</div>
-      <input *ngIf="editMode" [(ngModel)]="selectedQualification.category" />
+      <input *ngIf="editMode" [(ngModel)]="selectedQualification.category" (ngModelChange)="onFieldChange('category', $event)" />
     </div>
     <div class="qualification-detail">
       <label>Level:</label>
       <div *ngIf="!editMode">{{ selectedQualification?.level }}</div>
-      <input *ngIf="editMode" [(ngModel)]="selectedQualification.level" />
+      <input *ngIf="editMode" [(ngModel)]="selectedQualification.level" (ngModelChange)="onFieldChange('level', $event)" />
     </div>
   </mat-card-content>
 </mat-card>

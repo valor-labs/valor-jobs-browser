@@ -29,7 +29,7 @@ export class JobsComponent implements OnInit, OnDestroy {
   editMode: boolean = false;
 
   private subscriptions: Subscription[] = [];
-  private list: any[] = []
+  public list: any[] = []
 
   constructor(
     private route: ActivatedRoute,
@@ -45,10 +45,12 @@ export class JobsComponent implements OnInit, OnDestroy {
       })
     );
 
+
     this.subscriptions.push(
       this.sharedService.jobsContent$.subscribe((data: any) => {
         if (data) {
           this.list = data.list;
+          console.log("JobsComponent, jobsContent event");
           const params = this.route.snapshot.params;
           const track = params['track'];
           const title = params['title'];
@@ -82,57 +84,4 @@ export class JobsComponent implements OnInit, OnDestroy {
     }
   }
 
-  addCriteria(): void {
-    if (this.selectedJob) {
-      this.selectedJob.jobObject.criteria.push('');
-      this.updateJobContent();
-    }
-  }
-
-  removeCriteria(index: number): void {
-    if (this.selectedJob) {
-      this.selectedJob.jobObject.criteria.splice(index, 1);
-      this.updateJobContent();
-    }
-  }
-
-  addExperience(): void {
-    if (this.selectedJob) {
-      this.selectedJob.jobObject.experience.push('');
-      this.updateJobContent();
-    }
-  }
-
-  removeExperience(index: number): void {
-    if (this.selectedJob) {
-      this.selectedJob.jobObject.experience.splice(index, 1);
-      this.updateJobContent();
-    }
-  }
-
-  addQualification(): void {
-    if (this.selectedJob) {
-      this.selectedJob.jobObject.qualifications_criteria.push({ name: '', level: '' });
-      this.updateJobContent();
-    }
-  }
-
-  removeQualification(index: number): void {
-    if (this.selectedJob) {
-      this.selectedJob.jobObject.qualifications_criteria.splice(index, 1);
-      this.updateJobContent();
-    }
-  }
-
-  private updateJobContent(): void {
-    const updatedList = this.list.map(item => {
-      if (item.track === this.selectedJob.jobObject.track &&
-          item.title === this.selectedJob.jobObject.title &&
-          item.seniority === this.selectedJob.jobObject.seniority) {
-        return this.selectedJob.jobObject;
-      }
-      return item;
-    });
-    this.sharedService.updateJobsContent({ list: updatedList });
-  }
 }

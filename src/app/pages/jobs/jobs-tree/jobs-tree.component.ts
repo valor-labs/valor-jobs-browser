@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeNestedDataSource } from '@angular/material/tree';
+import { FlatTreeControl, NestedTreeControl } from '@angular/cdk/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTreeModule } from '@angular/material/tree';
@@ -61,6 +61,7 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
   @Output() jobSelected = new EventEmitter<ExampleFlatNode>();
+  @Input() jobsList: any[] = [];
 
   private destroy$ = new Subject<void>();
   selectedNode: ExampleFlatNode | null = null;
@@ -68,27 +69,73 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
   constructor(private sharedService: SharedService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.sharedService.jobsContent$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data: any) => {
-        if (data && data.list) {
-          this.dataSource.data = this.parseJobsData(data.list);
-          this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
-            const track = params['track'];
-            const title = params['title'];
-            const seniority = params['seniority'];
-            if (track && title && seniority) {
-              this.expandTreeToNode(track, title, seniority);
-            }
-          });
-        }
-      });
+    console.log("jobsList in ngOnInit", this.jobsList);
+
+    // this.sharedService.jobsContent$
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((data: any) => {
+    //     if (data && data.list) {
+    //       this.dataSource.data = this.parseJobsData(data.list);
+    //       this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
+    //         const track = params['track'];
+    //         const title = params['title'];
+    //         const seniority = params['seniority'];
+    //         if (track && title && seniority) {
+    //           this.expandTreeToNode(track, title, seniority);
+    //         }
+    //       });
+    //     }
+    //   });
+
+    this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      console.log("Router Event", params);
+      const track = params['track'];
+      const title = params['title'];
+      const seniority = params['seniority'];
+      if (track && title && seniority) {
+        this.expandTreeToNode(track, title, seniority);
+      }
+    });
+
+
+    // Subscribe to jobs updates
+    // this.sharedService.jobsUpdated$
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe(() => {
+    //     const data = this.sharedService.getCurrentJobsContent();
+    //     if (data && data.list) {
+    //       this.dataSource.data = this.parseJobsData(data.list);
+    //     }
+    //   });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log("changes", changes);
+    if (changes['jobsList']) {
+      this.updateTreeData();
+    }
+  }
+
+  private updateTreeData(): void {
+    const parsedData = this.parseJobsData(this.jobsList);
+    console.log("this.jobsList", parsedData);
+    this.dataSource.data = parsedData;
+
+    const params = this.route.snapshot.params;
+    const track = params['track'];
+    const title = params['title'];
+    const seniority = params['seniority'];
+    if (track && title && seniority) {
+      this.expandTreeToNode(track, title, seniority);
+    }
+  }
+
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 

@@ -72,7 +72,6 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: any) => {
         if (data && data.list) {
-          console.log("QualificationsTree: data.list", data.list);
           this.dataSource.data = this.parseQualificationsData(data.list);
           this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
             const category = params['category'];
@@ -82,6 +81,16 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
               this.expandTreeToNode(category, title, level);
             }
           });
+        }
+      });
+
+    // Subscribe to qualifications updates
+    this.sharedService.qualificationsUpdated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        const data = this.sharedService.getCurrentQualificationsContent();
+        if (data && data.list) {
+          this.dataSource.data = this.parseQualificationsData(data.list);
         }
       });
   }

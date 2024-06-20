@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import * as yaml from 'js-yaml';
 import { DOCUMENT } from '@angular/common';
@@ -17,6 +17,10 @@ export class SharedService {
   private qualificationsYamlUrlSubject = new BehaviorSubject<string>(this.defaultQualificationsYamlUrl);
   private jobsContentSubject = new BehaviorSubject<any>(null);
   private qualificationsContentSubject = new BehaviorSubject<any>(null);
+
+  // New subjects to notify about updates
+  private jobsUpdatedSubject = new Subject<void>();
+  private qualificationsUpdatedSubject = new Subject<void>();
 
   constructor(private http: HttpClient, @Inject(DOCUMENT) private document: Document) {
     const savedJobsUrl = this.getLocalStorageItem('jobsYamlUrl');
@@ -73,20 +77,37 @@ export class SharedService {
     return this.qualificationsContentSubject.asObservable();
   }
 
+  get jobsUpdated$(): Observable<void> {
+    return this.jobsUpdatedSubject.asObservable();
+  }
+
+  get qualificationsUpdated$(): Observable<void> {
+    return this.qualificationsUpdatedSubject.asObservable();
+  }
+
   updateJobsContent(jobsContent: any): void {
     this.jobsContentSubject.next(jobsContent);
+    this.jobsUpdatedSubject.next(); // Notify about the update
   }
 
   updateQualificationsContent(qualificationsContent: any): void {
     this.qualificationsContentSubject.next(qualificationsContent);
+    this.qualificationsUpdatedSubject.next(); // Notify about the update
   }
 
   getCurrentJobsContent(): any {
     return this.jobsContentSubject.value;
   }
 
+  getCurrentQualificationsContent(): any {
+    return this.qualificationsContentSubject.value;
+  }
+
   private fetchYamlData(url: string): Observable<any> {
-    return this.http.get(url, { responseType: 'text' }).pipe(
+    // Ensure the URL points to the raw content
+    const rawUrl = url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+    return this.http.get(rawUrl, { responseType: 'text' }).pipe(
+      // tap(response => console.log('Fetched response:', response)),
       map(yamlText => yaml.load(yamlText))
     );
   }
