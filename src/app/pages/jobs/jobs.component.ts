@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { JobsTreeComponent } from './jobs-tree/jobs-tree.component';
 import { JobsExperienceComponent } from './jobs-experience/jobs-experience.component';
@@ -28,7 +28,8 @@ export class JobsComponent implements OnInit, OnDestroy {
   selectedJob: any = null;
   editMode: boolean = false;
 
-  private subscriptions: Subscription[] = [];
+  private destroy$ = new Subject<void>();
+
   public list: any[] = []
 
   constructor(
@@ -38,39 +39,35 @@ export class JobsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.sharedService.editMode$.subscribe((data: any) => {
+
+    this.sharedService.editMode$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: any) => {
         this.editMode = data;
         this.cdr.detectChanges();
       })
-    );
 
-
-    this.subscriptions.push(
-      this.sharedService.jobsContent$.subscribe((data: any) => {
-        if (data) {
+    this.sharedService.jobsContent$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: any) => {
+        if (data && data.list) {
           this.list = data.list;
-          console.log("JobsComponent, jobsContent event");
-          const params = this.route.snapshot.params;
-          const track = params['track'];
-          const title = params['title'];
-          const seniority = params['seniority'];
-          if (track && title && seniority) {
-            this.loadJob(track, title, seniority);
-          }
         }
+
+        console.log("JobsComponent, jobsContent event");
+        const params = this.route.snapshot.params;
+        const track = params['track'];
+        const title = params['title'];
+        const seniority = params['seniority'];
+        if (track && title && seniority) {
+          this.loadJob(track, title, seniority);
+        }
+        
       })
-    );
+ 
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
-
-  onJobSelected(job: any): void {
-    this.selectedJob = job;
-  }
-
+  
   private loadJob(track: string, title: string, seniority: string): void {
     const job = this.list.find((item: any) => 
       item.track === track && 
@@ -83,5 +80,16 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     }
   }
+
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  onJobSelected(job: any): void {
+    this.selectedJob = job;
+  }
+
 
 }

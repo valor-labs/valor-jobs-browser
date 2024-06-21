@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { QualificationsTreeComponent } from './qualifications-tree/qualifications-tree.component';
 import { QualificationsKnowledgeComponent } from './qualifications-knowledge/qualifications-knowledge.component';
@@ -28,7 +28,11 @@ export class QualificationsComponent implements OnInit, OnDestroy {
   selectedQualification: any = null;
   editMode: boolean = false;
 
-  private subscriptions: Subscription[] = [];
+  private destroy$ = new Subject<void>();
+
+  
+
+  public list: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -36,42 +40,54 @@ export class QualificationsComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {}
 
+
+  
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.sharedService.editMode$.subscribe((data: any) => {
+
+    this.sharedService.editMode$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: any) => {
         this.editMode = data;
         this.cdr.detectChanges();
       })
-    );
 
-    this.subscriptions.push(
-      this.route.params.subscribe(params => {
-        const category = params['category'];
-        const title = params['title'];
-        const level = params['level'];
+    this.sharedService.qualificationsContent$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data: any) => {
+      if (data && data.list) {
+        this.list = data.list;
+      }
 
-        if (category && title && level) {
-          this.subscriptions.push( this.sharedService.qualificationsContent$.subscribe((data: any) => {
-            if (data && data.list) {
-              const qualification = data.list.find((item: any) => 
-                item.category === category && 
-                item.title === title && 
-                item.level == level
-              );
-          
-              if (qualification) {
-                this.selectedQualification = qualification;
-                this.cdr.detectChanges();
-              }
-            }
-          }));
-        }
-      })
+      console.log("QualificationsComponent, qualificationsContent event");
+      const params = this.route.snapshot.params;
+      const category = params['category'];
+      const title = params['title'];
+      const level = params['level'];
+      if (category && title && level) {
+        this.loadQualification(category, title, level);
+      }
+
+    });
+
+  }
+
+
+  loadQualification(category: string, title: string, level: string|number) {
+    const qualification = this.list.find((item: any) => 
+      item.category === category && 
+      item.title === title && 
+      item.level == level
     );
+            
+    if (qualification) {
+      this.selectedQualification = qualification;
+      this.cdr.detectChanges();
+    }
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onQualificationSelected(qualification: any): void {

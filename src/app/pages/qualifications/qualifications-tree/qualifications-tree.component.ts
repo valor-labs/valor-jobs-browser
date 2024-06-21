@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { FlatTreeControl } from '@angular/cdk/tree';
@@ -60,6 +60,7 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
+  @Input() qualificationsList: any[] = []
   @Output() qualificationSelected = new EventEmitter<ExampleFlatNode>();
 
   private destroy$ = new Subject<void>();
@@ -68,36 +69,46 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
   constructor(private sharedService: SharedService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.sharedService.qualificationsContent$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data: any) => {
-        if (data && data.list) {
-          this.dataSource.data = this.parseQualificationsData(data.list);
-          this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
-            const category = params['category'];
-            const title = params['title'];
-            const level = params['level'];
-            if (category && title && level) {
-              this.expandTreeToNode(category, title, level);
-            }
-          });
-        }
-      });
+    
 
-    // Subscribe to qualifications updates
-    this.sharedService.qualificationsUpdated$
+    this.route.params
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        const data = this.sharedService.getCurrentQualificationsContent();
-        if (data && data.list) {
-          this.dataSource.data = this.parseQualificationsData(data.list);
+      .subscribe(params => {
+        console.log("Qualifications Router Event", params);
+        const category = params['category'];
+        const title = params['title'];
+        const level = params['level'];
+        if (category && title && level) {
+          this.expandTreeToNode(category, title, level);
         }
       });
   }
 
+  
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['qualificationsList']) {
+      this.updateTreeData();
+    }
+  }
+
+  private updateTreeData(): void {
+    const parsedData = this.parseQualificationsData(this.qualificationsList);
+    console.log("parsedData", parsedData);
+    this.dataSource.data = parsedData;
+
+    const params = this.route.snapshot.params;
+    const category = params['category'];
+    const title = params['title'];
+    const level = params['level'];
+    if (category && title && level) {
+      this.expandTreeToNode(category, title, level);
+    }
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;

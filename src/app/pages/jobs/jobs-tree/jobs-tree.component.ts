@@ -60,8 +60,8 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-  @Output() jobSelected = new EventEmitter<ExampleFlatNode>();
   @Input() jobsList: any[] = [];
+  @Output() jobSelected = new EventEmitter<ExampleFlatNode>();
 
   private destroy$ = new Subject<void>();
   selectedNode: ExampleFlatNode | null = null;
@@ -87,15 +87,17 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
     //     }
     //   });
 
-    this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
-      console.log("Router Event", params);
-      const track = params['track'];
-      const title = params['title'];
-      const seniority = params['seniority'];
-      if (track && title && seniority) {
-        this.expandTreeToNode(track, title, seniority);
-      }
-    });
+    this.route.params
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        console.log("Jobs Router Event", params);
+        const track = params['track'];
+        const title = params['title'];
+        const seniority = params['seniority'];
+        if (track && title && seniority) {
+          this.expandTreeToNode(track, title, seniority);
+        }
+      });
 
 
     // Subscribe to jobs updates
@@ -109,6 +111,7 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
     //   });
   }
 
+  
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -123,9 +126,7 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
   }
 
   private updateTreeData(): void {
-    const parsedData = this.parseJobsData(this.jobsList);
-    console.log("this.jobsList", parsedData);
-    this.dataSource.data = parsedData;
+    this.dataSource.data = this.parseJobsData(this.jobsList);
 
     const params = this.route.snapshot.params;
     const track = params['track'];
