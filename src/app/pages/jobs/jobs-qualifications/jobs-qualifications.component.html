@@ -4,9 +4,9 @@
   </mat-card-header>
   <mat-card-content>
     <ul>
-      <li *ngFor="let qualification of selectedJob?.jobObject?.qualifications_criteria; let i = index">
-        <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.qualifications_criteria[i].name" placeholder="Qualification Name" />
-        <input *ngIf="editMode" [(ngModel)]="selectedJob.jobObject.qualifications_criteria[i].level" placeholder="Level" />
+      <li *ngFor="let qualification of selectedJob?.qualifications_criteria; let i = index">
+        <input *ngIf="editMode" [(ngModel)]="selectedJob.qualifications_criteria[i].name" placeholder="Qualification Name" />
+        <input *ngIf="editMode" [(ngModel)]="selectedJob.qualifications_criteria[i].level" placeholder="Level" />
         
         <p *ngIf="!editMode">
           <a [routerLink]="['/qualifications', qualification.name, qualification.level]">

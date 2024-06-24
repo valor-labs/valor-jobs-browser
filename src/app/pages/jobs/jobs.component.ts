@@ -54,7 +54,6 @@ export class JobsComponent implements OnInit, OnDestroy {
           this.list = data.list;
         }
 
-        console.log("JobsComponent, jobsContent event");
         const params = this.route.snapshot.params;
         const track = params['track'];
         const title = params['title'];
@@ -76,7 +75,7 @@ export class JobsComponent implements OnInit, OnDestroy {
     );
 
     if (job) {
-      this.selectedJob = { jobObject: job };
+      this.selectedJob = job;
       this.cdr.detectChanges();
     }
   }
@@ -91,5 +90,9 @@ export class JobsComponent implements OnInit, OnDestroy {
     this.selectedJob = job;
   }
 
+  onJobChanged(updatedJob: any): void {
+    this.selectedJob = {...updatedJob};
+    this.list = [...this.list];
+  }
 
 }

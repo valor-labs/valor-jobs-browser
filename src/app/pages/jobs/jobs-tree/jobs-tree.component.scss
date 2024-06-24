@@ -5,6 +5,25 @@
   flex-direction: column;
   
 
+  .tree-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }  
+
+  .mat-card-title {
+    margin-right: auto;
+  }
+
+  .add-button {
+    margin-left: 16px; // Adjust as necessary
+    height: 36px; // Ensure button height aligns with title text
+    width: 36px; // Keep the button square
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   mat-card-content {
     padding-top: 16px;
     overflow: auto;

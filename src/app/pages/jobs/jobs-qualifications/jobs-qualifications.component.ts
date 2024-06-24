@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SharedService } from '../../../services/shared.service';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 
@@ -22,45 +21,21 @@ export class JobsQualificationsComponent {
   @Input() selectedJob: any;
   @Input() editMode: boolean = false;
 
-  constructor(private sharedService: SharedService) {}
+  constructor() {}
 
   addQualification(): void {
     if (this.selectedJob) {
-      if (!this.selectedJob.jobObject.qualifications_criteria) {
-        this.selectedJob.jobObject.qualifications_criteria = [];
+      if (!this.selectedJob.qualifications_criteria) {
+        this.selectedJob.qualifications_criteria = [];
       }
-      this.selectedJob.jobObject.qualifications_criteria.push({ name: '', level: '' });
-      this.updateJobContent();
+      this.selectedJob.qualifications_criteria.push({ name: '', level: '' });
     }
   }
 
   removeQualification(index: number): void {
     if (this.selectedJob) {
-      this.selectedJob.jobObject.qualifications_criteria.splice(index, 1);
-      this.updateJobContent();
+      this.selectedJob.qualifications_criteria.splice(index, 1);
     }
   }
 
-  // updateQualification(content: any, index: number, field: string): void {
-  //   if (this.selectedJob) {
-  //     this.selectedJob.jobObject.qualifications_criteria[index][field] = content;
-  //     this.updateJobContent();
-  //   }
-  // }
-
-  private updateJobContent(): void {
-    // Retrieve the current job list from the service
-    const currentJobs = this.sharedService.getCurrentJobsContent();
-    // Update the job in the list
-    const updatedJobs = currentJobs.list.map((job: any) => {
-      if (job.track === this.selectedJob.jobObject.track &&
-          job.title === this.selectedJob.jobObject.title &&
-          job.seniority === this.selectedJob.jobObject.seniority) {
-        return this.selectedJob.jobObject;
-      }
-      return job;
-    });
-    // Update the job list in the service
-    this.sharedService.updateJobsContent({ list: updatedJobs });
-  }
 }

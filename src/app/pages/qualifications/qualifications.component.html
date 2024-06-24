@@ -1,6 +1,6 @@
 <div class="qualifications-container">
   <div class="tree-column">
-    <app-qualifications-tree [qualificationsList]="list" (qualificationSelected)="onQualificationSelected($event)"></app-qualifications-tree>
+    <app-qualifications-tree [qualificationsList]="list" [editMode]="editMode" (qualificationSelected)="onQualificationSelected($event)"></app-qualifications-tree>
   </div>
   <div class="grid-container" *ngIf="selectedQualification">
     <div class="column1">

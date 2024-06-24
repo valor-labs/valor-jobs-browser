@@ -58,7 +58,6 @@ export class QualificationsComponent implements OnInit, OnDestroy {
         this.list = data.list;
       }
 
-      console.log("QualificationsComponent, qualificationsContent event");
       const params = this.route.snapshot.params;
       const category = params['category'];
       const title = params['title'];
@@ -80,7 +79,7 @@ export class QualificationsComponent implements OnInit, OnDestroy {
     );
             
     if (qualification) {
-      this.selectedQualification = qualification;
+      this.selectedQualification = { qualificationObject: qualification };
       this.cdr.detectChanges();
     }
   }

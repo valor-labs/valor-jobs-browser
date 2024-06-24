@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { SharedService } from '../../../services/shared.service';
+
 
 @Component({
   selector: 'app-job-details',
@@ -18,24 +18,15 @@ import { SharedService } from '../../../services/shared.service';
 export class JobDetailsComponent {
   @Input() selectedJob: any;
   @Input() editMode: boolean = false;
+  // @Input() list: any[] = [];
+  @Output() jobChanged = new EventEmitter<any>();
 
-  constructor(private sharedService: SharedService) {}
+  constructor(private cdr: ChangeDetectorRef) {}
+
 
   onFieldChange(fieldName: string, newValue: string) {
-    this.selectedJob.jobObject[fieldName] = newValue;
-    this.updateJobContent();
+    this.jobChanged.emit(this.selectedJob);
+    this.cdr.detectChanges();
   }
 
-  private updateJobContent(): void {
-    const currentJobs = this.sharedService.getCurrentJobsContent();
-    const updatedJobs = currentJobs.list.map((job: any) => {
-      if (job.track === this.selectedJob.jobObject.track &&
-          job.title === this.selectedJob.jobObject.title &&
-          job.seniority === this.selectedJob.jobObject.seniority) {
-        return this.selectedJob.jobObject;
-      }
-      return job;
-    });
-    this.sharedService.updateJobsContent({ list: updatedJobs });
-  }
 }

@@ -12,52 +12,34 @@ import { MatCardModule } from '@angular/material/card';
   imports: [
     MatCardModule,
     CommonModule,
-    ContenteditableDirective // Import the standalone directive
+    ContenteditableDirective
   ],
 })
 export class JobsExperienceComponent {
   @Input() selectedJob: any;
   @Input() editMode: boolean = false;
 
-  constructor(private sharedService: SharedService) {}
+  constructor() {}
 
   addExperience(): void {
     if (this.selectedJob) {
-      if (!this.selectedJob.jobObject.experience) {
-        this.selectedJob.jobObject.experience = [];
+      if (!this.selectedJob.experience) {
+        this.selectedJob.experience = [];
       }
-      this.selectedJob.jobObject.experience.push('');
-      this.updateJobContent();
+      this.selectedJob.experience.push('');
     }
   }
 
   removeExperience(index: number): void {
     if (this.selectedJob) {
-      this.selectedJob.jobObject.experience.splice(index, 1);
-      this.updateJobContent();
+      this.selectedJob.experience.splice(index, 1);
     }
   }
 
   updateExperience(content: string, index: number): void {
     if (this.selectedJob) {
-      this.selectedJob.jobObject.experience[index] = content;
-      this.updateJobContent();
+      this.selectedJob.experience[index] = content;
     }
   }
 
-  private updateJobContent(): void {
-    // Retrieve the current job list from the service
-    const currentJobs = this.sharedService.getCurrentJobsContent();
-    // Update the job in the list
-    const updatedJobs = currentJobs.list.map((job: any) => {
-      if (job.track === this.selectedJob.jobObject.track &&
-          job.title === this.selectedJob.jobObject.title &&
-          job.seniority === this.selectedJob.jobObject.seniority) {
-        return this.selectedJob.jobObject;
-      }
-      return job;
-    });
-    // Update the job list in the service
-    this.sharedService.updateJobsContent({ list: updatedJobs });
-  }
 }

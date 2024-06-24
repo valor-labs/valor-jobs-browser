@@ -61,7 +61,9 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
   @Input() jobsList: any[] = [];
-  @Output() jobSelected = new EventEmitter<ExampleFlatNode>();
+  @Input() editMode: boolean = false;
+  @Input() selectedJob: any;
+  @Output() jobSelected = new EventEmitter<any>();
 
   private destroy$ = new Subject<void>();
   selectedNode: ExampleFlatNode | null = null;
@@ -69,58 +71,30 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
   constructor(private sharedService: SharedService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    console.log("jobsList in ngOnInit", this.jobsList);
-
-    // this.sharedService.jobsContent$
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((data: any) => {
-    //     if (data && data.list) {
-    //       this.dataSource.data = this.parseJobsData(data.list);
-    //       this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
-    //         const track = params['track'];
-    //         const title = params['title'];
-    //         const seniority = params['seniority'];
-    //         if (track && title && seniority) {
-    //           this.expandTreeToNode(track, title, seniority);
-    //         }
-    //       });
-    //     }
-    //   });
-
     this.route.params
       .pipe(takeUntil(this.destroy$))
       .subscribe(params => {
-        console.log("Jobs Router Event", params);
         const track = params['track'];
-        const title = params['title'];
+        const position = params['position'];
         const seniority = params['seniority'];
-        if (track && title && seniority) {
-          this.expandTreeToNode(track, title, seniority);
+        if (track && position && seniority) {
+          this.expandTreeToNode(track, position, seniority);
         }
       });
-
-
-    // Subscribe to jobs updates
-    // this.sharedService.jobsUpdated$
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe(() => {
-    //     const data = this.sharedService.getCurrentJobsContent();
-    //     if (data && data.list) {
-    //       this.dataSource.data = this.parseJobsData(data.list);
-    //     }
-    //   });
   }
 
-  
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['jobsList']) {
       this.updateTreeData();
+    }
+
+    if (changes['selectedJob'] && changes['selectedJob'].currentValue) {
+      this.router.navigate(['/jobs', changes['selectedJob'].currentValue.track, changes['selectedJob'].currentValue.position, changes['selectedJob'].currentValue.seniority]);
     }
   }
 
@@ -129,13 +103,12 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
 
     const params = this.route.snapshot.params;
     const track = params['track'];
-    const title = params['title'];
+    const position = params['position'];
     const seniority = params['seniority'];
-    if (track && title && seniority) {
-      this.expandTreeToNode(track, title, seniority);
+    if (track && position && seniority) {
+      this.expandTreeToNode(track, position, seniority);
     }
   }
-
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
@@ -143,9 +116,38 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
     if (!node.expandable) {
       const job = node.jobObject;
       this.selectedNode = node; // Track the selected node before navigating
-      this.router.navigate(['/jobs', job.track, job.title, job.seniority]);
-      this.jobSelected.emit(node);
+      this.router.navigate(['/jobs', job.track, job.position, job.seniority]);
+      this.jobSelected.emit(job);
     }
+  }
+
+  addNew(): void {
+
+    const newJob = {
+        title: 'New Title',  
+        track: this.selectedNode?.jobObject?.track ?? "New Track",
+        category: this.selectedNode?.jobObject?.category ?? "New Category",
+        position: this.selectedNode?.jobObject?.position ?? "New Position",
+        seniority: 'New Seniority',
+        criteria: [],
+        experience: [],
+        qualifications_criteria: []
+    };
+
+    this.jobsList.push(newJob);
+    this.dataSource.data = this.parseJobsData(this.jobsList);
+
+    // Select and open the newly created job entry
+    this.selectedNode = {
+      name: `${newJob.seniority} ${newJob.title}`,
+      level: 2,
+      expandable: false,
+      jobObject: newJob
+    };
+
+
+    this.jobSelected.emit(newJob);
+    this.router.navigate(['/jobs', newJob.track, newJob.position, newJob.seniority]);
   }
 
   private parseJobsData(data: any[]): JobNode[] {
@@ -177,21 +179,17 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
     return Object.values(tracks);
   }
 
-  private expandTreeToNode(track: string, title: string, seniority: string): void {
+  private expandTreeToNode(track: string, position: string, seniority: string): void {
     this.treeControl.dataNodes.forEach(node => {
       if (node.level === 0 && node.name === track) {
         this.treeControl.expand(node);
       }
-      if (node.level === 1 && node.name === title) {
+      if (node.level === 1 && node.name === position) {
         this.treeControl.expand(node);
-      }
-      if (node.level === 2 && node.jobObject.seniority === seniority) {
-        this.treeControl.expand(node);
-        this.treeControl.expandDescendants(node);
       }
 
-      if (node.jobObject?.track === track && node.jobObject?.title === title && node.jobObject?.seniority === seniority) {
-        this.selectedNode = node; // Track the selected node
+      if (node.jobObject?.track === track && node.jobObject?.position === position && node.jobObject?.seniority === seniority) {
+        this.selectedNode = node;
       }
     });
   }

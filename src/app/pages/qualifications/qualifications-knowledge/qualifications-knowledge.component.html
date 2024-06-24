@@ -5,7 +5,8 @@
   <mat-card-content>
     <ul>
       <li *ngFor="let knowledge of selectedQualification?.knowledge; let i = index">
-        <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i)">{{ knowledge }}</div>
+        <div *ngIf="editMode" [appContenteditable]="editMode" class="editable" (contentChange)="updateKnowledge($event, i)">{{ knowledge }}</div>
+
         <p *ngIf="!editMode">{{ knowledge }}</p>
         <button *ngIf="editMode" (click)="removeKnowledge(i)">Remove</button>
       </li>

@@ -1,8 +1,9 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedService } from '../../../services/shared.service';
 import { MatCardModule } from '@angular/material/card';
+import { ContenteditableDirective } from '../../../directives/contenteditable.directive';
 
 @Component({
   selector: 'app-qualifications-knowledge',
@@ -10,17 +11,17 @@ import { MatCardModule } from '@angular/material/card';
   styleUrls: ['./qualifications-knowledge.component.scss'],
   standalone: true,
   imports: [
-    NgFor,
-    NgIf,
     FormsModule,
-    MatCardModule
+    MatCardModule,
+    CommonModule,
+    ContenteditableDirective
   ]
 })
 export class QualificationsKnowledgeComponent {
   @Input() selectedQualification: any;
   @Input() editMode: boolean = false;
 
-  constructor(private sharedService: SharedService) {}
+  constructor() {}
 
   addKnowledge(): void {
     if (this.selectedQualification) {
@@ -28,24 +29,23 @@ export class QualificationsKnowledgeComponent {
         this.selectedQualification.knowledge = [];
       }
       this.selectedQualification.knowledge.push('');
-      this.updateQualificationsContent();
     }
   }
 
   removeKnowledge(index: number): void {
     if (this.selectedQualification) {
       this.selectedQualification.knowledge.splice(index, 1);
-      this.updateQualificationsContent();
+    }
+  }
+
+  updateKnowledge(content: string, index: number): void {
+    if (this.selectedQualification) {
+      this.selectedQualification.knowledge[index] = content;
     }
   }
 
   onContentEditableInput(event: Event, index: number): void {
     const target = event.target as HTMLElement;
     this.selectedQualification.knowledge[index] = target.innerText;
-    this.updateQualificationsContent();
-  }
-
-  private updateQualificationsContent(): void {
-    this.sharedService.updateQualificationsContent(this.selectedQualification);
   }
 }

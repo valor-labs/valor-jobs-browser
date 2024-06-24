@@ -61,6 +61,7 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
   @Input() qualificationsList: any[] = []
+  @Input() editMode: boolean = false;
   @Output() qualificationSelected = new EventEmitter<ExampleFlatNode>();
 
   private destroy$ = new Subject<void>();
@@ -74,7 +75,6 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
     this.route.params
       .pipe(takeUntil(this.destroy$))
       .subscribe(params => {
-        console.log("Qualifications Router Event", params);
         const category = params['category'];
         const title = params['title'];
         const level = params['level'];
@@ -117,9 +117,35 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
       const qualification = node.qualificationObject;
       this.selectedNode = node; // Track the selected node before navigating
       this.router.navigate(['/qualifications', qualification.category, qualification.title, qualification.level]);
-      this.qualificationSelected.emit(qualification);
+      this.qualificationSelected.emit(node);
     }
   }
+
+
+
+  addNew(): void {
+
+    const newQ = {
+        title: 'New Title',  
+        category: this.selectedNode?.qualificationObject?.category ?? "New Category",
+        level: 1,
+    };
+
+    this.qualificationsList.push(newQ);
+    this.dataSource.data = this.parseQualificationsData(this.qualificationsList);
+
+    this.selectedNode = {
+      name: `${newQ.title}, Level: ${newQ.level}`,
+      level: 2,
+      expandable: false,
+      qualificationObject: newQ
+    };
+
+
+    this.qualificationSelected.emit(this.selectedNode);
+    this.router.navigate(['/qualifications', newQ.category, newQ.title, newQ.level]);
+  }
+
 
   private parseQualificationsData(data: any[]): QualificationNode[] {
     const categories: { [key: string]: QualificationNode } = {};

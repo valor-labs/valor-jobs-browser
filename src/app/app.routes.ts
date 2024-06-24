@@ -12,7 +12,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: '/jobs', pathMatch: 'full' },
       { path: 'jobs', component: JobsComponent },
-      { path: 'jobs/:track/:title/:seniority', component: JobsComponent },
+      { path: 'jobs/:track/:position/:seniority', component: JobsComponent },
       { path: 'qualifications', component: QualificationsComponent },
       { path: 'qualifications/:category/:title/:level', component: QualificationsComponent },
       { path: 'qualifications/:title/:level', component: QualificationRedirectComponent }, // New route for redirection
