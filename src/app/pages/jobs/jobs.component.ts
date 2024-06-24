@@ -55,22 +55,25 @@ export class JobsComponent implements OnInit, OnDestroy {
         }
 
         const params = this.route.snapshot.params;
-        const track = params['track'];
-        const title = params['title'];
-        const seniority = params['seniority'];
-        if (track && title && seniority) {
-          this.loadJob(track, title, seniority);
-        }
-        
+        this.loadJob(params);
       })
- 
+
+    this.route.params
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        this.loadJob(params);
+      });
   }
 
   
-  private loadJob(track: string, title: string, seniority: string): void {
+  private loadJob(params: any): void {
+    const track = params['track'];
+    const position = params['position'];
+    const seniority = params['seniority'];
+
     const job = this.list.find((item: any) => 
       item.track === track && 
-      item.title === title && 
+      item.position === position && 
       item.seniority === seniority
     );
 
@@ -91,8 +94,13 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   onJobChanged(updatedJob: any): void {
-    this.selectedJob = {...updatedJob};
-    this.list = [...this.list];
+    let jobIdx = this.list.findIndex(item => item === updatedJob);
+    if (jobIdx!==-1) {
+      let newJob = {...updatedJob}
+      this.list[jobIdx] = newJob;
+      this.list = [...this.list];
+      this.selectedJob = newJob;
+    }
   }
 
 }

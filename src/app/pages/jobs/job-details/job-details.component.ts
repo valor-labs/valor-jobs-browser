@@ -18,13 +18,13 @@ import { MatCardModule } from '@angular/material/card';
 export class JobDetailsComponent {
   @Input() selectedJob: any;
   @Input() editMode: boolean = false;
-  // @Input() list: any[] = [];
   @Output() jobChanged = new EventEmitter<any>();
 
   constructor(private cdr: ChangeDetectorRef) {}
 
 
   onFieldChange(fieldName: string, newValue: string) {
+    this.selectedJob[fieldName] = newValue;
     this.jobChanged.emit(this.selectedJob);
     this.cdr.detectChanges();
   }

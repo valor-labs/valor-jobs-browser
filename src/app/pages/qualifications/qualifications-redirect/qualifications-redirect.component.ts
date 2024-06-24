@@ -24,8 +24,6 @@ export class QualificationRedirectComponent implements OnInit {
   ngOnInit(): void {
     const title = this.route.snapshot.paramMap.get('title');
     const level = this.route.snapshot.paramMap.get('level');
-    
-    console.log("Redirect controller", title, level);
 
     if (title && level) {
       this.subscriptions.add(
@@ -35,8 +33,7 @@ export class QualificationRedirectComponent implements OnInit {
               item.title === title && 
               item.level == level
             );
-
-            console.log("qualification found:", qualification)
+            
             if (qualification) {
               const category = qualification.category;
               this.router.navigate(['/qualifications', category, title, level]);
