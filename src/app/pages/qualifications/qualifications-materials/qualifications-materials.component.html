@@ -7,7 +7,10 @@
     <ul>
       <li *ngFor="let material of selectedQualification?.materials_and_topics; let i = index">
         
-        <div *ngIf="editMode" contenteditable="true" class="editable" (input)="onContentEditableInput($event, i)">{{ material }}</div>
+        <input *ngIf="editMode" [(ngModel)]="material.title" placeholder="Title" />
+        <input *ngIf="editMode" [(ngModel)]="material.authors" placeholder="Authors" />
+        <input *ngIf="editMode" [(ngModel)]="material.subjects" placeholder="Topics & Subjects" />
+
 
         <p *ngIf="!editMode">{{ material.title }}</p>
         <p *ngIf="!editMode">{{ material.authors }}</p>

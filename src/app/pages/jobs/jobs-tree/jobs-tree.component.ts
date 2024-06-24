@@ -119,7 +119,6 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("changes", changes);
     if (changes['jobsList']) {
       this.updateTreeData();
     }

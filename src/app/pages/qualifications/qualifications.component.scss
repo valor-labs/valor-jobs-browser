@@ -7,45 +7,38 @@
   height: 100%;
 }
 
-.tree {
-  flex: 0 0 400px; /* Fixed width for the tree */
+.tree-column {
+  flex: 0 0 400px;
   padding: 10px;
   box-sizing: border-box;
-  overflow-y: auto; /* Ensure it handles overflow if content is large */
+  overflow-y: auto;
 }
 
 .grid-container {
-  display: block;
-  grid-template-columns: repeat(3, minmax(300px, 1fr));
-  gap: 10px;
+  padding-left: 20px;
+  display: grid;
+  gap: 20px;
+  flex: 1;
+  box-sizing: border-box;
+
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+}
+
+.column1, .column2 {
+
+}
+
+
+
+.knowledge, .dependency, .materials, .details {
+  margin: 20px;
+}
+
+
+.nothingselected-column {
   flex: 1;
   padding: 10px;
   box-sizing: border-box;
 }
 
-.knowledge, .dependency, .materials, .details {
-  float: left;
-  padding: 10px;
-  box-sizing: border-box;
-  overflow-y: auto; /* Ensure it handles overflow if content is large */
-  width: 100%;
-}
-
-// .noqualification-column {
-//   flex: 1;
-//   padding: 10px;
-//   box-sizing: border-box;
-// }
-
-@media screen and (min-width: 768px) {
-  .knowledge, .dependency, .materials, .details {
-    width: 50%;
-  }
-  // .grid-container {
-  //   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  // }
-
-  // .noqualification-column {
-  //   flex: 3;
-  // }
-}

@@ -1,22 +1,18 @@
 <div class="qualifications-container">
-  <div class="tree">
+  <div class="tree-column">
     <app-qualifications-tree [qualificationsList]="list" (qualificationSelected)="onQualificationSelected($event)"></app-qualifications-tree>
   </div>
   <div class="grid-container" *ngIf="selectedQualification">
-    <div class="details">
-      <app-qualification-details [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualification-details>
+    <div class="column1">
+      <app-qualification-details class="details" [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualification-details>
+      <app-qualifications-knowledge lass="knowledge" [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualifications-knowledge>
     </div>
-    <div class="knowledge">
-      <app-qualifications-knowledge [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualifications-knowledge>
-    </div>
-    <div class="dependency">
-      <app-qualifications-dependency [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualifications-dependency>
-    </div>
-    <div class="materials">
-      <app-qualifications-materials [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualifications-materials>
+    <div class="column2">
+      <app-qualifications-dependency class="dependency" [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualifications-dependency>
+      <app-qualifications-materials class="materials" [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualifications-materials>
     </div>
   </div>
-  <div class="noqualification-column" *ngIf="!selectedQualification">
+  <div class="nothingselected-column" *ngIf="!selectedQualification">
     Please select any qualification.
   </div>
 </div>

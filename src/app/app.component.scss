@@ -1,12 +1,45 @@
-/* styles.scss */
-.example-container {
-  height: 100%;
+app-top-navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
 }
 
-mat-sidenav {
-  width: 250px;
+
+.container {
+  margin-top: 56px;
+  
+  height: calc(100% - 56px);
+  margin-top: 56px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+
+  mat-sidenav {
+    width: 250px;
+  }
+  
 }
 
 .content {
+  flex: 1;
   padding: 20px;
+  overflow: auto; // Enable scrolling within the content area if needed
+  height: 100%;
+  display: block;
 }
+
+// mat-sidenav-content {
+//   flex: 1;
+//   // overflow: auto; // Enable scrolling for the main content area
+//   display: flex;
+//   flex-direction: column;
+//   height: 100%;
+// }
+
+// .content {
+//   flex: 1;
+//   padding: 20px;
+//   // overflow: auto; // Enable scrolling within the content area if needed
+// }

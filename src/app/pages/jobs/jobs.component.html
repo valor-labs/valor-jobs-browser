@@ -1,20 +1,17 @@
 <div class="jobs-container">
-  <div class="jobs-column">
+  <div class="tree-column">
     <app-jobs-tree [jobsList]="list" (jobSelected)="onJobSelected($event)"></app-jobs-tree>
   </div>
-
   <div class="grid-container" *ngIf="selectedJob">
-    <div class="details-column">
-      <app-job-details [selectedJob]="selectedJob" [editMode]="editMode"></app-job-details>
-    </div>
-    <div class="experience-column">
-      <app-jobs-experience [selectedJob]="selectedJob" [editMode]="editMode"></app-jobs-experience>
-    </div>
-    <div class="qualifications-column">
-      <app-jobs-qualifications [selectedJob]="selectedJob" [editMode]="editMode"></app-jobs-qualifications>
+    <div class="column1">
+      <app-job-details class="job-details" [selectedJob]="selectedJob" [editMode]="editMode"></app-job-details>
+      <app-jobs-qualifications class="job-qualifications" [selectedJob]="selectedJob" [editMode]="editMode"></app-jobs-qualifications>
+    </div>  
+    <div class="column2">
+      <app-jobs-experience class="job-experience" [selectedJob]="selectedJob" [editMode]="editMode"></app-jobs-experience>
     </div>
   </div>
-  <div class="nojobselected-column" *ngIf="!selectedJob">
+  <div class="nothingselected-column" *ngIf="!selectedJob">
     Please select any position.
   </div>
 </div>

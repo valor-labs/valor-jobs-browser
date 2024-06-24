@@ -99,7 +99,6 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
 
   private updateTreeData(): void {
     const parsedData = this.parseQualificationsData(this.qualificationsList);
-    console.log("parsedData", parsedData);
     this.dataSource.data = parsedData;
 
     const params = this.route.snapshot.params;

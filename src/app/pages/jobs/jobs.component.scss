@@ -7,78 +7,38 @@
   height: 100%;
 }
 
-.jobs-column {
-  flex: 0 0 400px; /* Fixed width for the tree */
+.tree-column {
+  flex: 0 0 400px;
   padding: 10px;
   box-sizing: border-box;
-  overflow-y: auto; /* Ensure it handles overflow if content is large */
+  overflow-y: auto;
 }
 
 .grid-container {
+  padding-left: 20px;
   display: grid;
-  gap: 10px;
+  gap: 20px;
+  flex: 1;
+  box-sizing: border-box;
+
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+}
+
+.column1, .column2 {
+
+}
+
+.job-details, .job-qualifications, .job-experience {
+  margin: 20px;
+}
+
+
+.nothingselected-column {
   flex: 1;
   padding: 10px;
   box-sizing: border-box;
 }
 
-.details-column, .experience-column, .qualifications-column {
-  padding: 10px;
-  box-sizing: border-box;
-  overflow-y: auto; /* Ensure it handles overflow if content is large */
-}
 
-.nojobselected-column {
-  flex: 1;
-  padding: 10px;
-  box-sizing: border-box;
-}
 
-@media screen and (min-width: 768px) {
-  .grid-container {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    grid-template-areas: 
-      "details experience"
-      "qualifications experience";
-  }
-
-  .details-column {
-    grid-area: details;
-  }
-
-  .experience-column {
-    grid-area: experience;
-  }
-
-  .qualifications-column {
-    grid-area: qualifications;
-  }
-
-  .nojobselected-column {
-    flex: 3;
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .grid-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    grid-template-areas: 
-      "details"
-      "qualifications"
-      "experience";
-  }
-
-  .details-column {
-    grid-area: details;
-  }
-
-  .experience-column {
-    grid-area: experience;
-  }
-
-  .qualifications-column {
-    grid-area: qualifications;
-  }
-}
