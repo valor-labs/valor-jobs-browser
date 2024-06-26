@@ -19,7 +19,7 @@
       </button>
     </div>
     <div class="button-container">
-      <button mat-button (click)="openExportDialog()">
+      <button mat-button (click)="openExport()" matBadge="changes" matBadgeSize="small" [matBadgeHidden]="noChanges">
         <mat-icon>upload</mat-icon>
         <span class="button-text">Export</span>
       </button>

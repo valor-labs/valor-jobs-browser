@@ -18,9 +18,14 @@ export class SharedService {
   private jobsContentSubject = new BehaviorSubject<any>(null);
   private qualificationsContentSubject = new BehaviorSubject<any>(null);
 
+  private changesIndicatorSubject = new BehaviorSubject<boolean>(false);
+
   // New subjects to notify about updates
   private jobsUpdatedSubject = new Subject<void>();
   private qualificationsUpdatedSubject = new Subject<void>();
+
+  private changesIndicator: boolean = false;
+  private listOfChanges: string[] = [];
 
   constructor(private http: HttpClient, @Inject(DOCUMENT) private document: Document) {
     const savedJobsUrl = this.getLocalStorageItem('jobsYamlUrl');
@@ -39,6 +44,10 @@ export class SharedService {
     } else {
       this.fetchYamlData(this.defaultQualificationsYamlUrl).subscribe(data => this.qualificationsContentSubject.next(data));
     }
+  }
+
+  get changesIndicator$(): Observable<boolean> {
+    return this.changesIndicatorSubject.asObservable();
   }
 
   get editMode$(): Observable<boolean> {
@@ -79,11 +88,15 @@ export class SharedService {
 
 
   updateJobsContent(jobsContent: any): void {
+    this.changesIndicatorSubject.next(true);
+
     this.jobsContentSubject.next(jobsContent);
     this.jobsUpdatedSubject.next(); // Notify about the update
   }
 
   updateQualificationsContent(qualificationsContent: any): void {
+    this.changesIndicatorSubject.next(true);
+
     this.qualificationsContentSubject.next(qualificationsContent);
     this.qualificationsUpdatedSubject.next(); // Notify about the update
   }
@@ -120,5 +133,9 @@ export class SharedService {
 
   private isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+  }
+
+  public setChangesIndicator(indicator: boolean):void {
+    this.changesIndicatorSubject.next(indicator);
   }
 }

@@ -32,24 +32,18 @@ export class QualificationsMaterialsComponent {
         authors: "",
         subjects: ""
       });
-      this.updateQualificationsContent();
     }
   }
 
   removeMaterial(index: number): void {
     if (this.selectedQualification) {
       this.selectedQualification.materials_and_topics.splice(index, 1);
-      this.updateQualificationsContent();
     }
   }
 
   onContentEditableInput(event: Event, index: number): void {
     const target = event.target as HTMLElement;
     this.selectedQualification.materials_and_topics[index] = target.innerText;
-    this.updateQualificationsContent();
   }
 
-  private updateQualificationsContent(): void {
-    this.sharedService.updateQualificationsContent(this.selectedQualification);
-  }
 }

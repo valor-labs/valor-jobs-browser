@@ -4,11 +4,12 @@ import { MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/sl
 import { MatButtonModule, MatMiniFabButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SettingsDialogComponent } from '../settings-dialog/settings-dialog.component';
-import { ExportDialogComponent } from '../export-dialog/export-dialog.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { SharedService } from '../../services/shared.service';
 import { MatDividerModule } from '@angular/material/divider';
-import { RouterModule } from '@angular/router';
+import { MatBadgeModule } from '@angular/material/badge';
+import { Router, RouterModule } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -16,16 +17,34 @@ import { RouterModule } from '@angular/router';
   templateUrl: './top-navigation.component.html',
   styleUrls: ['./top-navigation.component.scss'],
   standalone: true,
-  imports: [MatDialogModule, MatSlideToggleModule, MatButtonModule, MatIconModule, MatToolbarModule, MatDividerModule, RouterModule]
+  imports: [MatDialogModule, MatSlideToggleModule, MatButtonModule, MatIconModule, MatToolbarModule, MatDividerModule, RouterModule, MatBadgeModule]
 })
 export class TopNavigationComponent {
 
   @Output() menuToggled = new EventEmitter();
-  constructor(public dialog: MatDialog, private sharedService: SharedService) {}
+  noChanges: boolean = true;
+
+  private destroy$ = new Subject<void>();
+
+  constructor(public dialog: MatDialog, private sharedService: SharedService, private router: Router) {}
 
   toggleMenu(event: any) {
     this.menuToggled.emit();
   }
+
+  ngOnInit() {
+    this.sharedService.changesIndicator$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.noChanges = !data;
+      })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 
   toggleEditMode(event: MatSlideToggleChange): void {
     this.sharedService.setEditMode(event.checked);
@@ -40,16 +59,21 @@ export class TopNavigationComponent {
 
   }
 
-  openExportDialog(): void {
-    const dialogRef = this.dialog.open(ExportDialogComponent, {
-      width: '50%'
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        // Handle export data here
-        console.log('Export Data:', result);
-      }
-    });
+  openExport() {
+    this.router.navigate(['/export']);
   }
+
+  // openExportDialog(): void {
+  //   const dialogRef = this.dialog.open(ExportDialogComponent, {
+  //     width: '50%'
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result) {
+  //       // Handle export data here
+  //       console.log('Export Data:', result);
+  //     }
+  //   });
+  // }
 }

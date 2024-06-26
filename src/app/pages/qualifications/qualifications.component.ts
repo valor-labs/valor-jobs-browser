@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -39,7 +39,7 @@ export class QualificationsComponent implements OnInit, OnDestroy {
   ) {}
 
 
-  
+
   ngOnInit(): void {
 
     this.sharedService.editMode$

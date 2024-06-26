@@ -30,25 +30,19 @@ export class QualificationsDependencyComponent {
         this.selectedQualification.dependency = [];
       }
       this.selectedQualification.dependency.push({ title: '', level: '' });
-      this.updateQualificationsContent();
     }
   }
 
   removeDependency(index: number): void {
     if (this.selectedQualification) {
       this.selectedQualification.dependency.splice(index, 1);
-      this.updateQualificationsContent();
     }
   }
 
   onContentEditableInput(event: Event, index: number, field: string): void {
     const target = event.target as HTMLElement;
     this.selectedQualification.dependency[index][field] = target.innerText;
-    this.updateQualificationsContent();
   }
 
 
-  private updateQualificationsContent(): void {
-    this.sharedService.updateQualificationsContent(this.selectedQualification);
-  }
 }

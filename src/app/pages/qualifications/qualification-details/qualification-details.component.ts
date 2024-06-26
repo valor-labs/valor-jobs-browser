@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -22,7 +22,7 @@ export class QualificationDetailsComponent {
   constructor(private cdr: ChangeDetectorRef) {}
 
   onFieldChange(fieldName: string, newValue: string) {
-    this.selectedQualification.qualificationObject[fieldName] = newValue;
+    this.selectedQualification[fieldName] = newValue;
     this.qualificationChanged.emit(this.selectedQualification);
     this.cdr.detectChanges();
   }
