@@ -6,13 +6,11 @@
     </button>
   </mat-card-header>
   <mat-card-content>
-
-
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding (click)="onNodeClick(node)" [ngClass]="{'selected': node === selectedNode}">
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding (click)="onNodeClick(node)" [ngClass]="{'selected': node.qualificationObject === selectedQualification}">
         <button mat-button>{{node.name}}</button>
       </mat-tree-node>
-      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding (click)="onNodeClick(node)" [ngClass]="{'selected': node === selectedNode}">
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding (click)="onNodeClick(node)" [ngClass]="{'selected': node.qualificationObject === selectedQualification}">
         <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
           <mat-icon>
             {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}

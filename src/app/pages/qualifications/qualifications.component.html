@@ -1,10 +1,10 @@
 <div class="qualifications-container">
   <div class="tree-column">
-    <app-qualifications-tree [qualificationsList]="list" [editMode]="editMode" (qualificationSelected)="onQualificationSelected($event)"></app-qualifications-tree>
+    <app-qualifications-tree [qualificationsList]="list" [editMode]="editMode" [selectedQualification]="selectedQualification" (qualificationSelected)="onQualificationSelected($event)"></app-qualifications-tree>
   </div>
   <div class="grid-container" *ngIf="selectedQualification">
     <div class="column1">
-      <app-qualification-details class="details" [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualification-details>
+      <app-qualification-details class="details" [selectedQualification]="selectedQualification" (qualificationChanged)="onQualificationChanged($event)" [editMode]="editMode"></app-qualification-details>
       <app-qualifications-knowledge lass="knowledge" [selectedQualification]="selectedQualification" [editMode]="editMode"></app-qualifications-knowledge>
     </div>
     <div class="column2">

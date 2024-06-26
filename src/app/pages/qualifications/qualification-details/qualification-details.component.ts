@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -17,11 +17,13 @@ import { MatCardModule } from '@angular/material/card';
 export class QualificationDetailsComponent {
   @Input() selectedQualification: any;
   @Input() editMode: boolean = false;
+  @Output() qualificationChanged = new EventEmitter<any>();
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   onFieldChange(fieldName: string, newValue: string) {
     this.selectedQualification.qualificationObject[fieldName] = newValue;
+    this.qualificationChanged.emit(this.selectedQualification);
     this.cdr.detectChanges();
   }
 

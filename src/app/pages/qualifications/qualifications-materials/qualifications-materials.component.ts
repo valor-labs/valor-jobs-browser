@@ -27,7 +27,11 @@ export class QualificationsMaterialsComponent {
       if (!this.selectedQualification.materials_and_topics) {
         this.selectedQualification.materials_and_topics = [];
       }
-      this.selectedQualification.materials_and_topics.push('');
+      this.selectedQualification.materials_and_topics.push({
+        title: "",
+        authors: "",
+        subjects: ""
+      });
       this.updateQualificationsContent();
     }
   }

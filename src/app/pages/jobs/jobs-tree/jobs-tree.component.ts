@@ -28,7 +28,7 @@ interface ExampleFlatNode extends JobNode {
   styleUrls: ['./jobs-tree.component.scss'],
   standalone: true,
   imports: [
-    CommonModule, // Import CommonModule
+    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatTreeModule,
@@ -68,7 +68,7 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   // selectedNode: ExampleFlatNode | null = null;
 
-  constructor(private sharedService: SharedService, private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     
@@ -85,8 +85,10 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
     }
 
     if (changes['selectedJob'] && changes['selectedJob'].currentValue) {
-      this.expandTreeToNode(changes['selectedJob'].currentValue.track, changes['selectedJob'].currentValue.position, changes['selectedJob'].currentValue.seniority)
-      this.router.navigate(['/jobs', changes['selectedJob'].currentValue.track, changes['selectedJob'].currentValue.position, changes['selectedJob'].currentValue.seniority]);
+      const job = changes['selectedJob'].currentValue;
+
+      this.expandTreeToNode(job.track, job.position, job.seniority)
+      this.router.navigate(['/jobs', job.track, job.position, job.seniority]);
     }
   }
 
@@ -107,14 +109,12 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
   onNodeClick(node: ExampleFlatNode): void {
     if (!node.expandable) {
       const job = node.jobObject;
-      // this.selectedNode = node; // Track the selected node before navigating
       this.router.navigate(['/jobs', job.track, job.position, job.seniority]);
       this.jobSelected.emit(job);
     }
   }
 
   addNew(): void {
-
     const newJob = {
         title: 'New Title',  
         track: this.selectedJob?.track ?? "New Track",
@@ -128,15 +128,6 @@ export class JobsTreeComponent implements OnInit, OnDestroy {
 
     this.jobsList.push(newJob);
     this.dataSource.data = this.parseJobsData(this.jobsList);
-
-    // Select and open the newly created job entry
-    // this.selectedNode = {
-    //   name: `${newJob.seniority} ${newJob.title}`,
-    //   level: 2,
-    //   expandable: false,
-    //   jobObject: newJob
-    // };
-
 
     this.jobSelected.emit(newJob);
     this.router.navigate(['/jobs', newJob.track, newJob.position, newJob.seniority]);

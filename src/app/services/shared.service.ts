@@ -77,13 +77,6 @@ export class SharedService {
     return this.qualificationsContentSubject.asObservable();
   }
 
-  get jobsUpdated$(): Observable<void> {
-    return this.jobsUpdatedSubject.asObservable();
-  }
-
-  get qualificationsUpdated$(): Observable<void> {
-    return this.qualificationsUpdatedSubject.asObservable();
-  }
 
   updateJobsContent(jobsContent: any): void {
     this.jobsContentSubject.next(jobsContent);

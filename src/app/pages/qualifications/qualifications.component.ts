@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { QualificationsTreeComponent } from './qualifications-tree/qualifications-tree.component';
 import { QualificationsKnowledgeComponent } from './qualifications-knowledge/qualifications-knowledge.component';
@@ -30,8 +30,6 @@ export class QualificationsComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  
-
   public list: any[] = [];
 
   constructor(
@@ -59,27 +57,28 @@ export class QualificationsComponent implements OnInit, OnDestroy {
       }
 
       const params = this.route.snapshot.params;
-      const category = params['category'];
-      const title = params['title'];
-      const level = params['level'];
-      if (category && title && level) {
-        this.loadQualification(category, title, level);
-      }
+      this.loadQualification(params);
+    });
 
+
+    this.route.params
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(params => {
+      this.loadQualification(params);
     });
 
   }
 
 
-  loadQualification(category: string, title: string, level: string|number) {
+  loadQualification(params: any) {
     const qualification = this.list.find((item: any) => 
-      item.category === category && 
-      item.title === title && 
-      item.level == level
+      item.category === params.category && 
+      item.title === params.title && 
+      item.level == params.level
     );
             
     if (qualification) {
-      this.selectedQualification = { qualificationObject: qualification };
+      this.selectedQualification = qualification;
       this.cdr.detectChanges();
     }
   }
@@ -91,6 +90,17 @@ export class QualificationsComponent implements OnInit, OnDestroy {
 
   onQualificationSelected(qualification: any): void {
     this.selectedQualification = qualification;
+  }
+
+  
+  onQualificationChanged(updatedQualification: any): void {
+    let jobIdx = this.list.findIndex(item => item === updatedQualification);
+    if (jobIdx!==-1) {
+      let newJob = {...updatedQualification}
+      this.list[jobIdx] = newJob;
+      this.list = [...this.list];
+      this.selectedQualification = newJob;
+    }
   }
 
 }

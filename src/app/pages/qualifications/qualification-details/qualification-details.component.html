@@ -5,18 +5,18 @@
   <mat-card-content>
     <div class="qualification-detail">
       <label>Title:</label>
-      <div *ngIf="!editMode">{{ selectedQualification?.qualificationObject?.title }}</div>
-      <input *ngIf="editMode" [(ngModel)]="selectedQualification.qualificationObject.title" (ngModelChange)="onFieldChange('title', $event)"/>
+      <div *ngIf="!editMode">{{ selectedQualification?.title }}</div>
+      <input *ngIf="editMode" [(ngModel)]="selectedQualification.title" (ngModelChange)="onFieldChange('title', $event)"/>
     </div>
     <div class="qualification-detail">
       <label>Category:</label>
-      <div *ngIf="!editMode">{{ selectedQualification?.qualificationObject?.category }}</div>
-      <input *ngIf="editMode" [(ngModel)]="selectedQualification.qualificationObject.category" (ngModelChange)="onFieldChange('category', $event)" />
+      <div *ngIf="!editMode">{{ selectedQualification?.category }}</div>
+      <input *ngIf="editMode" [(ngModel)]="selectedQualification.category" (ngModelChange)="onFieldChange('category', $event)" />
     </div>
     <div class="qualification-detail">
       <label>Level:</label>
-      <div *ngIf="!editMode">{{ selectedQualification?.qualificationObject?.level }}</div>
-      <input *ngIf="editMode" [(ngModel)]="selectedQualification.qualificationObject.level" (ngModelChange)="onFieldChange('level', $event)" />
+      <div *ngIf="!editMode">{{ selectedQualification?.level }}</div>
+      <input *ngIf="editMode" [(ngModel)]="selectedQualification.level" (ngModelChange)="onFieldChange('level', $event)" />
     </div>
   </mat-card-content>
 </mat-card>

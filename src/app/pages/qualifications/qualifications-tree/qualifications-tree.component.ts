@@ -5,9 +5,7 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTreeModule } from '@angular/material/tree';
-import { SharedService } from '../../../services/shared.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 
@@ -28,7 +26,7 @@ interface ExampleFlatNode extends QualificationNode {
   styleUrls: ['./qualifications-tree.component.scss'],
   standalone: true,
   imports: [
-    CommonModule, // Import CommonModule
+    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatTreeModule,
@@ -62,26 +60,26 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
 
   @Input() qualificationsList: any[] = []
   @Input() editMode: boolean = false;
-  @Output() qualificationSelected = new EventEmitter<ExampleFlatNode>();
+  @Input() selectedQualification: any;
+  @Output() qualificationSelected = new EventEmitter<any>();
 
   private destroy$ = new Subject<void>();
-  selectedNode: ExampleFlatNode | null = null;
 
-  constructor(private sharedService: SharedService, private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     
 
-    this.route.params
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(params => {
-        const category = params['category'];
-        const title = params['title'];
-        const level = params['level'];
-        if (category && title && level) {
-          this.expandTreeToNode(category, title, level);
-        }
-      });
+    // this.route.params
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe(params => {
+    //     const category = params['category'];
+    //     const title = params['title'];
+    //     const level = params['level'];
+    //     if (category && title && level) {
+    //       this.expandTreeToNode(category, title, level);
+    //     }
+    //   });
   }
 
   
@@ -95,11 +93,17 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
     if (changes['qualificationsList']) {
       this.updateTreeData();
     }
+
+    if (changes['selectedQualification'] && changes['selectedQualification'].currentValue) {
+      const qualification = changes['selectedQualification'].currentValue;
+      this.expandTreeToNode(qualification.category, qualification.title, qualification.level)
+      this.router.navigate(['/qualifications', qualification.category, qualification.title, qualification.level]);
+    }
+
   }
 
   private updateTreeData(): void {
-    const parsedData = this.parseQualificationsData(this.qualificationsList);
-    this.dataSource.data = parsedData;
+    this.dataSource.data = this.parseQualificationsData(this.qualificationsList);
 
     const params = this.route.snapshot.params;
     const category = params['category'];
@@ -115,7 +119,6 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
   onNodeClick(node: ExampleFlatNode): void {
     if (!node.expandable) {
       const qualification = node.qualificationObject;
-      this.selectedNode = node; // Track the selected node before navigating
       this.router.navigate(['/qualifications', qualification.category, qualification.title, qualification.level]);
       this.qualificationSelected.emit(node);
     }
@@ -124,25 +127,16 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
 
 
   addNew(): void {
-
     const newQ = {
         title: 'New Title',  
-        category: this.selectedNode?.qualificationObject?.category ?? "New Category",
+        category: this.selectedQualification?.category ?? "New Category",
         level: 1,
     };
 
     this.qualificationsList.push(newQ);
     this.dataSource.data = this.parseQualificationsData(this.qualificationsList);
 
-    this.selectedNode = {
-      name: `${newQ.title}, Level: ${newQ.level}`,
-      level: 2,
-      expandable: false,
-      qualificationObject: newQ
-    };
-
-
-    this.qualificationSelected.emit(this.selectedNode);
+    this.qualificationSelected.emit(newQ);
     this.router.navigate(['/qualifications', newQ.category, newQ.title, newQ.level]);
   }
 
@@ -185,13 +179,13 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
       if (node.level === 1 && node.name === title) {
         this.treeControl.expand(node);
       }
-      if (node.level === 2 && node.qualificationObject.level == level) {
-        this.treeControl.expand(node);
-        this.treeControl.expandDescendants(node);
-      }
+      // if (node.level === 2 && node.qualificationObject.level == level) {
+      //   this.treeControl.expand(node);
+      //   this.treeControl.expandDescendants(node);
+      // }
 
       if (node.qualificationObject?.category === category && node.qualificationObject?.title === title && node.qualificationObject?.level == level) {
-        this.selectedNode = node; // Track the selected node
+        this.selectedQualification = node.qualificationObject;
       }
     });
   }
