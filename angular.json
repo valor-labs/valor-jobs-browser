@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "valor-jobs-browser": {
+    "valor-growth": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/valor-jobs-browser",
+            "outputPath": "dist/valor-growth/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -71,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "valor-jobs-browser:build:production"
+              "buildTarget": "valor-growth:build:production"
             },
             "development": {
-              "buildTarget": "valor-jobs-browser:build:development"
+              "buildTarget": "valor-growth:build:development"
             }
           },
           "defaultConfiguration": "development"
