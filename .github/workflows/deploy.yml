@@ -9,7 +9,7 @@ env:
   CACHE_NODE_MODULES_PATH: |
     ~/.npm
     node_modules
-    **/node_modules
+  
 
 jobs:
   cache:
@@ -21,7 +21,7 @@ jobs:
         id: cache
         with:
           path: ${{ env.CACHE_NODE_MODULES_PATH }}
-          key: node-${{ hashFiles('**/package-lock.json' }}
+          key: node-${{ hashFiles('**/package-lock.json'}}
       - run: npm ci
         if: steps.cache.outputs.cache-hit != 'true'
 
