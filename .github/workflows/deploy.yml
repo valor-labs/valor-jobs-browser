@@ -28,7 +28,27 @@ jobs:
       - run: npm ci
         if: steps.cache.outputs.cache-hit != 'true'
 
-  build-and-deploy:
+  # build-and-deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: cache
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '22.3.0'
+
+  #     - uses: actions/cache@v4
+  #       with:
+  #         path: ${{ env.CACHE_NODE_MODULES_PATH }}
+  #         key: node-${{ hashFiles('**/package-lock.json')}}
+  #     - run: npm run build -- --base-href /valor-jobs-browser/
+  #     - name: Deploy 🚀
+  #       uses: JamesIves/github-pages-deploy-action@v4
+  #       with:
+  #         branch: gh-pages
+  #         folder: ./dist/valor-growth/browser
+
+   build-and-deploy:
     runs-on: ubuntu-latest
     needs: cache
     steps:
@@ -41,9 +61,12 @@ jobs:
         with:
           path: ${{ env.CACHE_NODE_MODULES_PATH }}
           key: node-${{ hashFiles('**/package-lock.json')}}
-      - run: npm run build -- --base-href /valor-jobs-browser/
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
+      - run: npm run build
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
         with:
-          branch: gh-pages
-          folder: ./dist/valor-growth/browser
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 1e3b30bddc085f36cbf4f8a3e4776ff9
+          projectName: valor-jobs-browser
+          directory: dist/valor-growth/browser
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
