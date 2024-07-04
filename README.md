@@ -8,7 +8,7 @@ The motivation behind this can vary. It might be to provide clear guidelines for
 
 While there isn't a one-size-fits-all approach to this, we concluded that having a reference point is crucial. This allows developers to identify areas for improvement, and it gives our clients a clear understanding of our team's qualifications, fostering a level of transparency they can appreciate.
 
-This realization led us to create a set of YAML documents that map jobs to their respective qualification requirements. You can explore these documents here: [valor-labs/valor-jobs](https://github.com/valor-labs/valor-jobs-browser). The repository also includes the YAML schema detailing the structure and format of these documents.
+This realization led us to create a set of YAML documents that map jobs to their respective qualification requirements. You can explore these documents here: [valor-labs/valor-jobs](https://github.com/valor-labs/valor-jobs). The repository also includes the YAML schema detailing the structure and format of these documents.
 
 To make browsing these documents easier, we developed **this** application: [valor-labs/valor-jobs-browser](https://github.com/valor-labs/valor-jobs-browser). The application features "Jobs" and "Qualifications" menu items for intuitive navigation. Users can enter "Edit mode" by switching on the slider at the top, allowing them to modify the data as needed. However, changes are not saved automatically; users need to copy the generated YAML from the Export dialog and create pull requests in GitHub to persist their modifications.
 
