@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { SharedService } from '../../services/shared.service';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
+import {MatMenuModule} from '@angular/material/menu';
 import { Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -17,12 +18,14 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './top-navigation.component.html',
   styleUrls: ['./top-navigation.component.scss'],
   standalone: true,
-  imports: [MatDialogModule, MatSlideToggleModule, MatButtonModule, MatIconModule, MatToolbarModule, MatDividerModule, RouterModule, MatBadgeModule]
+  imports: [MatDialogModule, MatSlideToggleModule, MatButtonModule, MatIconModule, MatToolbarModule, MatDividerModule, RouterModule, MatBadgeModule, MatMenuModule]
 })
 export class TopNavigationComponent {
 
   @Output() menuToggled = new EventEmitter();
   noChanges: boolean = true;
+  jobsUrl: string = "";
+  qualificationsUrl: string = "";
 
   private destroy$ = new Subject<void>();
 
@@ -37,6 +40,18 @@ export class TopNavigationComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.noChanges = !data;
+      })
+
+    this.sharedService.jobsYamlUrl$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.jobsUrl = data;
+      })
+
+    this.sharedService.qualificationsYamlUrl$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.qualificationsUrl = data;
       })
   }
 
