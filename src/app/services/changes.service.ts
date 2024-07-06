@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import * as jsYaml from 'js-yaml';
-import { Diff } from 'diff';
 
 
 enum DifferenceType {
