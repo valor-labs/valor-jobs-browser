@@ -1,18 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QualificationsRedirectComponent } from './qualifications-redirect.component';
+import { QualificationRedirectComponent } from './qualifications-redirect.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SharedService } from '../../../services/shared.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
-describe('QualificationsRedirectComponent', () => {
-  let component: QualificationsRedirectComponent;
-  let fixture: ComponentFixture<QualificationsRedirectComponent>;
+describe('QualificationRedirectComponent', () => {
+  let component: QualificationRedirectComponent;
+  let fixture: ComponentFixture<QualificationRedirectComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [QualificationsRedirectComponent]
+      imports: [QualificationRedirectComponent, HttpClientTestingModule, RouterTestingModule],
+      providers: [SharedService]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(QualificationsRedirectComponent);
+    fixture = TestBed.createComponent(QualificationRedirectComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

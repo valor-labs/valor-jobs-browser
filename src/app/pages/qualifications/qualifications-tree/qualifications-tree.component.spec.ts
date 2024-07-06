@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { QualificationsTreeComponent } from './qualifications-tree.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('QualificationsTreeComponent', () => {
   let component: QualificationsTreeComponent;
@@ -8,7 +9,7 @@ describe('QualificationsTreeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [QualificationsTreeComponent]
+      imports: [QualificationsTreeComponent, RouterTestingModule]
     })
     .compileComponents();
 

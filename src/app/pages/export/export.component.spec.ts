@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ExportComponent } from './export.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ExportComponent', () => {
   let component: ExportComponent;
@@ -8,7 +10,7 @@ describe('ExportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ExportComponent]
+      imports: [ExportComponent, HttpClientTestingModule, BrowserAnimationsModule]
     })
     .compileComponents();
 
