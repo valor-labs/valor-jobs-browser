@@ -24,6 +24,7 @@ export class TopNavigationComponent {
 
   @Output() menuToggled = new EventEmitter();
   noChanges: boolean = true;
+  
   jobsUrl: string = "";
   qualificationsUrl: string = "";
 

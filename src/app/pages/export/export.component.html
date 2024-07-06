@@ -1,19 +1,42 @@
 <!-- <div class="container"> -->
-  <mat-card class="changes">
-    <mat-card-header>
-      <mat-card-title>Changes</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      Not yet implemented
-    </mat-card-content>
-  </mat-card>
+  <div>
+    <mat-card class="help">
+      <mat-card-header>
+        <mat-card-title>Help</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ol>
+          <li>Press Copy button</li>
+          <li>Press Create a Pull Request button</li>
+          <li>Paste the YAML replacing the old Github file</li>
+          <li>Create your branch and submit your Pull Request for review</li>
+        </ol>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="changes">
+      <mat-card-header>
+        <mat-card-title>Changes</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        {{differences}}
+      </mat-card-content>
+    </mat-card>
+  </div>
 
   <mat-card class="jobs-yaml">
     <mat-card-header>
       <mat-card-title>Jobs YAML</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <textarea matInput [(ngModel)]="jobsYaml"></textarea>
+      <div class="buttons_bar">
+        <button mat-raised-button [cdkCopyToClipboard]="jobsYaml">Copy YAML</button>
+        <button mat-raised-button (click)="createPL(jobsUrl)">Create a Pull Request</button>
+      </div>
+
+      <mat-form-field class="example-full-width">
+        <mat-label>Leave a comment</mat-label>
+        <textarea matInput placeholder=""  [(ngModel)]="jobsYaml"></textarea>
+      </mat-form-field>
     </mat-card-content>
   </mat-card>
 
@@ -22,7 +45,15 @@
       <mat-card-title>Qualifications YAML</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <textarea matInput [(ngModel)]="qualificationsYaml"></textarea>
+      <div class="buttons_bar">
+        <button mat-raised-button [cdkCopyToClipboard]="qualificationsYaml">Copy YAML</button>
+        <a mat-raised-button [href]="qualificationsUrl" target="_blank">Create a Pull Request</a>
+      </div>
+
+      <mat-form-field class="example-full-width">
+        <mat-label>Leave a comment</mat-label>
+        <textarea matInput placeholder=""  [(ngModel)]="qualificationsYaml"></textarea>
+      </mat-form-field>
     </mat-card-content>
   </mat-card>
 <!-- </div> -->
