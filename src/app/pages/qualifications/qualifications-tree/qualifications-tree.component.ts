@@ -69,17 +69,6 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     
-
-    // this.route.params
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe(params => {
-    //     const category = params['category'];
-    //     const title = params['title'];
-    //     const level = params['level'];
-    //     if (category && title && level) {
-    //       this.expandTreeToNode(category, title, level);
-    //     }
-    //   });
   }
 
   
@@ -179,10 +168,6 @@ export class QualificationsTreeComponent implements OnInit, OnDestroy {
       if (node.level === 1 && node.name === title) {
         this.treeControl.expand(node);
       }
-      // if (node.level === 2 && node.qualificationObject.level == level) {
-      //   this.treeControl.expand(node);
-      //   this.treeControl.expandDescendants(node);
-      // }
 
       if (node.qualificationObject?.category === category && node.qualificationObject?.title === title && node.qualificationObject?.level == level) {
         this.selectedQualification = node.qualificationObject;
