@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { JobsTreeComponent } from './jobs-tree.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('JobsTreeComponent', () => {
   let component: JobsTreeComponent;
@@ -8,7 +9,7 @@ describe('JobsTreeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [JobsTreeComponent]
+      imports: [JobsTreeComponent, RouterTestingModule]
     })
     .compileComponents();
 

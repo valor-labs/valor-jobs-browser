@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { QualificationsDependencyComponent } from './qualifications-dependency.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('QualificationsDependencyComponent', () => {
   let component: QualificationsDependencyComponent;
