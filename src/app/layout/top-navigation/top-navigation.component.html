@@ -5,7 +5,7 @@
   <a [routerLink]="['/']">
     <img src="/assets/logo.png" alt="Logo" class="logo">
   </a>
-  <span>Jobs & Qualifications Browser</span>
+  <h1>Jobs & Qualifications Browser</h1>
   <span class="spacer"></span>
   
   <div class="right-buttons">
@@ -23,6 +23,19 @@
         <mat-icon>upload</mat-icon>
         <span class="button-text">Export</span>
       </button>
+    </div>
+    <div class="button-container">
+      <button mat-button [matMenuTriggerFor]="sourcesMenu" matBadge="changes" matBadgeSize="small" [matBadgeHidden]="noChanges">
+        <mat-icon>code_blocks</mat-icon>
+        <span class="button-text">Github</span>
+      </button>
+      <mat-menu #sourcesMenu="matMenu">
+        <a mat-menu-item [href]="jobsUrl" target="_blank">Jobs YAML</a>
+        <a mat-menu-item [href]="qualificationsUrl" target="_blank">Qualifications YAML</a>
+        <mat-divider></mat-divider>
+        <a mat-menu-item href="https://github.com/valor-labs/valor-jobs-browser" target="_blank">This app original repository</a>
+        <a mat-menu-item href="https://github.com/valor-labs/valor-jobs" target="_blank">Jobs and Qualifications original repository</a>
+      </mat-menu>
     </div>
   </div>
 </mat-toolbar>

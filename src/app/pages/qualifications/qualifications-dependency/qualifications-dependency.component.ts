@@ -22,7 +22,7 @@ export class QualificationsDependencyComponent {
   @Input() selectedQualification: any;
   @Input() editMode: boolean = false;
 
-  constructor(private sharedService: SharedService) {}
+  constructor() {}
 
   addDependency(): void {
     if (this.selectedQualification) {

@@ -20,7 +20,7 @@ export class QualificationsMaterialsComponent {
   @Input() selectedQualification: any;
   @Input() editMode: boolean = false;
 
-  constructor(private sharedService: SharedService) {}
+  constructor() {}
 
   addMaterial(): void {
     if (this.selectedQualification) {
