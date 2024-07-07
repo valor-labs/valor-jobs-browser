@@ -39,7 +39,7 @@ jobs:
         with:
           path: ${{ env.CACHE_NODE_MODULES_PATH }}
           key: node-${{ hashFiles('**/package-lock.json')}}
-      - run: npm run test
+      - run: npm run ci:test
 
   build:
     runs-on: ubuntu-latest
