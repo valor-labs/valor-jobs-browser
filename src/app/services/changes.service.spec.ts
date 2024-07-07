@@ -75,7 +75,7 @@ list:
     const originalObject = yaml.load(qualificationsYaml1);
     const changedObject = yaml.load(qualificationsYaml2);
 
-    const differences = service.compare("qualifications", originalObject as Object, changedObject as Object);
+    const differences = service.compareYAMLObjects("qualifications", originalObject as Object, changedObject as Object);
 
     expect(differences).toEqual(expectedDifferences);
   })
@@ -158,7 +158,7 @@ list:
     const originalObject = yaml.load(qualificationsYaml1);
     const changedObject = yaml.load(qualificationsYaml2);
 
-    const differences = service.compare("qualifications", originalObject as Object, changedObject as Object);
+    const differences = service.compareYAMLObjects("qualifications", originalObject as Object, changedObject as Object);
 
     expect(differences).toEqual(expectedDifferences);
   });
@@ -301,7 +301,7 @@ list:
     const originalObject = yaml.load(jobsYaml1);
     const changedObject = yaml.load(jobsYaml2);
 
-    const differences = service.compare("jobs", originalObject as Object, changedObject as Object);
+    const differences = service.compareYAMLObjects("jobs", originalObject as Object, changedObject as Object);
 
     expect(differences).toEqual(expectedDifferences);
   });
