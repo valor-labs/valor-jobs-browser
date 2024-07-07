@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 // import * as jsYaml from 'js-yaml';
 
 
-enum DifferenceType {
+export enum DifferenceType {
   MainDeleted = "MainDeleted",
   MainAdded = "MainAdded",
   MainChanged = "MainChanged",
@@ -10,7 +10,7 @@ enum DifferenceType {
   ElementAdded = "ElementAdded",
 }
 
-interface IDifference {
+export interface IDifference {
   type: DifferenceType
   item?: any
   path?: string
@@ -44,7 +44,7 @@ export class ChangesService {
   // }
   
 
-  public compareYAMLObjects(type: "jobs"|"qualifications", originalObject: object, changedObject: object): string[] {
+  public compareYAMLObjects(type: "jobs"|"qualifications", originalObject: any, changedObject: any): IDifference[] {
     // const originalObject = this.loadYaml(originalYaml);
     // const changedObject = this.loadYaml(changedYaml);
 
@@ -60,8 +60,7 @@ export class ChangesService {
         jObjDifferentiator :
         qObjDifferentiator;
 
-    const differences = this.getDifferences(differentiator, originalObject, changedObject);
-    return this.differenceToText(type, differences);
+    return this.compareRootLists(differentiator, originalObject.list, changedObject.list);
   }
 
 
@@ -203,55 +202,10 @@ export class ChangesService {
 
 
 
-  private getDifferences(differentiator: Function, originalObject: any, changedObject: any, path = ''): IDifference[] {
-    return this.compareRootLists(differentiator, originalObject.list, changedObject.list);
-  }
+  // private getDifferences(differentiator: Function, originalObject: any, changedObject: any, path = ''): IDifference[] {
+  //   return 
+  // }
 
 
 
-  private differenceToText(type: "jobs"|"qualifications", list: IDifference[]): string[] {
-    return list.map((difference: IDifference) => {
-      return this.differenceRenderer(type, difference);
-    })
-  }
-
-
-  private _shorter(propertyString?: string) {
-    return (propertyString && propertyString.length>20) ? propertyString.substring(0, 20)+"..." : propertyString;
-  }
-
-  public differenceRenderer(type: "jobs"|"qualifications", difference: IDifference): string {
-    let itemName = "Unknown item";
-    switch (type) {
-      case "jobs": 
-        itemName = `${difference.item?.category} | ${difference.item?.title} | ${difference.item?.seniority}`
-        break;
-      case "qualifications":
-        itemName = `${difference.item?.category} | ${difference.item?.title} | ${difference.item?.level}`
-        break;
-    }
-
-
-    switch (difference.type) {
-      case DifferenceType.MainAdded: {
-        return `Added item "${itemName}"`
-      }
-      case DifferenceType.MainDeleted: {
-        return `Deleted item "${itemName}"`
-      }
-      case DifferenceType.ElementAdded: {
-        return `Update: ${difference.property} "${this._shorter(difference.value)}" added to "${itemName}"`
-      }
-      case DifferenceType.ElementDeleted: {
-        return `Update: ${difference.property} "${this._shorter(difference.value)}" removed from "${itemName}"`
-      }
-      case DifferenceType.MainChanged: {
-        return `Item "${itemName}" updated`
-      }
-      default: {
-        console.error(`${difference.type} - Not implemented`)
-        return "Some difference";
-      }
-    }
-  }
 }

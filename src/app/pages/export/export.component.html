@@ -18,10 +18,50 @@
         <mat-card-title>Changes</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        jobs
-        <ul><li *ngFor="let difference of jobsDifferences">{{difference}}</li></ul>
-        qualifications
-        <ul><li *ngFor="let difference of qualificationsDifferences">{{difference}}</li></ul>
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Jobs </mat-panel-title>
+              <mat-panel-description> {{ jobsDifferences.length }} changes detected </mat-panel-description>
+            </mat-expansion-panel-header>
+            <ul>
+              <li *ngFor="let difference of jobsDifferences">
+                <mat-icon *ngIf="difference.type=='MainAdded'" class="added" aria-hidden="false" aria-label="Added" fontIcon="add_circle" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='MainDeleted'" class="removed" aria-hidden="false" aria-label="Removed" fontIcon="cancel" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='MainChanged'" class="changed" aria-hidden="false" aria-label="Removed" fontIcon="edit_note" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='ElementAdded'" class="added" aria-hidden="false" aria-label="Removed" fontIcon="playlist_add" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='ElementDeleted'" class="removed" aria-hidden="false" aria-label="Removed" fontIcon="playlist_remove" inline=true></mat-icon>
+                <span>
+                  {{differenceRenderer("jobs", difference)}}
+                </span>
+              </li>
+            </ul>
+
+          </mat-expansion-panel>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Qualifications </mat-panel-title>
+              <mat-panel-description> {{ qualificationsDifferences.length }} changes detected </mat-panel-description>
+            </mat-expansion-panel-header>
+            
+            <ul>
+              <li *ngFor="let difference of qualificationsDifferences">
+                <mat-icon *ngIf="difference.type=='MainAdded'" class="added" aria-hidden="false" aria-label="Added" fontIcon="add_circle" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='MainDeleted'" class="removed" aria-hidden="false" aria-label="Removed" fontIcon="cancel" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='MainChanged'" class="changed" aria-hidden="false" aria-label="Removed" fontIcon="edit_note" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='ElementAdded'" class="added" aria-hidden="false" aria-label="Removed" fontIcon="playlist_add" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='ElementDeleted'" class="removed" aria-hidden="false" aria-label="Removed" fontIcon="playlist_remove" inline=true></mat-icon>
+    
+                <span>
+                  {{differenceRenderer("qualifications", difference)}}
+                </span>
+              </li>
+            </ul>
+
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- <div *ngIf="!jobsDifferences.length && !qualificationsDifferences.length">No changes detected. Turn Edit Mode on and change either Jobs or Qualifications.</div> -->
       </mat-card-content>
     </mat-card>
   </div>

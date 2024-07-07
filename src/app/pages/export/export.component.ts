@@ -7,21 +7,23 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import {MatExpansionModule} from '@angular/material/expansion';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
-import { ChangesService } from '../../services/changes.service';
+import { ChangesService, DifferenceType, IDifference } from '../../services/changes.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-export',
   standalone: true,
-  imports: [FormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, ClipboardModule, CommonModule],
+  imports: [FormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, ClipboardModule, CommonModule, MatIconModule, MatExpansionModule],
   templateUrl: './export.component.html',
   styleUrl: './export.component.scss',
 })
 export class ExportComponent {
 
-  jobsDifferences: string[] = [];
-  qualificationsDifferences: string[] = [];
+  jobsDifferences: IDifference[] = [];
+  qualificationsDifferences: IDifference[] = [];
 
   jobsYamlText: string = '';
   qualificationsYamlText: string = '';
@@ -88,5 +90,51 @@ export class ExportComponent {
   }
 
 
+  
+  private differencesToText(type: "jobs"|"qualifications", list: IDifference[]): string[] {
+    return list.map((difference: IDifference) => {
+      return this.differenceRenderer(type, difference);
+    })
+  }
+
+
+  private _shorter(propertyString?: string) {
+    return (propertyString && propertyString.length>20) ? propertyString.substring(0, 20)+"..." : propertyString;
+  }
+
+  public differenceRenderer(type: "jobs"|"qualifications", difference: IDifference): string {
+    let itemName = "Unknown item";
+    switch (type) {
+      case "jobs": 
+        itemName = `${difference.item?.category} | ${difference.item?.title} | ${difference.item?.seniority}`
+        break;
+      case "qualifications":
+        itemName = `${difference.item?.category} | ${difference.item?.title} | ${difference.item?.level}`
+        break;
+    }
+
+
+    switch (difference.type) {
+      case DifferenceType.MainAdded: {
+        return `"${itemName}"`
+      }
+      case DifferenceType.MainDeleted: {
+        return `"${itemName}"`
+      }
+      case DifferenceType.ElementAdded: {
+        return `${difference.property} "${this._shorter(difference.value)}" to ${itemName}`
+      }
+      case DifferenceType.ElementDeleted: {
+        return `${difference.property} "${this._shorter(difference.value)}" from ${itemName}`
+      }
+      case DifferenceType.MainChanged: {
+        return `"${itemName}"`
+      }
+      default: {
+        console.error(`${difference.type} - Not implemented`)
+        return "Some difference";
+      }
+    }
+  }
 
 }

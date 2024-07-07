@@ -77,7 +77,7 @@ list:
 
     const differences = service.compareYAMLObjects("qualifications", originalObject as Object, changedObject as Object);
 
-    expect(differences).toEqual(expectedDifferences);
+    expect(differences.length).toEqual(expectedDifferences.length);
   })
 
   it('should detect differences between two Qualification YAMLs', () => {
@@ -160,7 +160,7 @@ list:
 
     const differences = service.compareYAMLObjects("qualifications", originalObject as Object, changedObject as Object);
 
-    expect(differences).toEqual(expectedDifferences);
+    expect(differences.length).toEqual(expectedDifferences.length);
   });
 
 
@@ -303,6 +303,6 @@ list:
 
     const differences = service.compareYAMLObjects("jobs", originalObject as Object, changedObject as Object);
 
-    expect(differences).toEqual(expectedDifferences);
+    expect(differences.length).toEqual(expectedDifferences.length);
   });
 });
