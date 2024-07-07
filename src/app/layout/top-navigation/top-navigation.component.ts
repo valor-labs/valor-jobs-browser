@@ -24,7 +24,7 @@ export class TopNavigationComponent {
 
   @Output() menuToggled = new EventEmitter();
   noChanges: boolean = true;
-  
+
   jobsUrl: string = "";
   qualificationsUrl: string = "";
 
@@ -44,16 +44,17 @@ export class TopNavigationComponent {
       })
 
     this.sharedService.jobsYamlUrl$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.jobsUrl = data;
-      })
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
+      this.jobsUrl = data;
+    })
 
-    this.sharedService.qualificationsYamlUrl$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.qualificationsUrl = data;
-      })
+  this.sharedService.qualificationsYamlUrl$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
+      this.qualificationsUrl = data;
+    })
+
   }
 
   ngOnDestroy(): void {
@@ -68,9 +69,9 @@ export class TopNavigationComponent {
 
   openSettingsDialog(): void {
     // const dialogRef = 
+    
       this.dialog.open(SettingsDialogComponent, {
-        width: '50%',
-        data: { yamlUrl: 'https://github.com/valor-labs/valor-jobs/blob/dev/data_compiled/all_positions.yaml' }
+        width: '50%'
       });
 
   }

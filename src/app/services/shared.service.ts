@@ -1,16 +1,17 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import * as yaml from 'js-yaml';
 import { DOCUMENT } from '@angular/common';
+import { AlertsService } from './alerts.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
-  private defaultJobsYamlUrl = 'https://raw.githubusercontent.com/valor-labs/valor-jobs/dev/data_compiled/all_positions.yaml';
-  private defaultQualificationsYamlUrl = 'https://raw.githubusercontent.com/valor-labs/valor-jobs/dev/data_compiled/all_qualifications.yaml';
+  public readonly defaultJobsYamlUrl = 'https://raw.githubusercontent.com/valor-labs/valor-jobs/dev/data_compiled/all_positions.yaml';
+  public readonly defaultQualificationsYamlUrl = 'https://raw.githubusercontent.com/valor-labs/valor-jobs/dev/data_compiled/all_qualifications.yaml';
 
   private editModeSubject = new BehaviorSubject<boolean>(false);
   private jobsYamlUrlSubject = new BehaviorSubject<string>(this.defaultJobsYamlUrl);
@@ -27,30 +28,47 @@ export class SharedService {
   private jobsOriginalYAMLObj: any;
   private qualificationsOriginalYAMLObj: any;
 
-  constructor(private http: HttpClient, @Inject(DOCUMENT) private document: Document) {
+  getResultJobsUrl() {
     const savedJobsUrl = this.getLocalStorageItem('jobsYamlUrl');
-    const savedQualificationsUrl = this.getLocalStorageItem('qualificationsYamlUrl');
-    
-    const resultJobsUrl = savedJobsUrl ?? this.defaultJobsYamlUrl;
-    const resultQualificationsUrl = savedQualificationsUrl ?? this.defaultQualificationsYamlUrl;
+    return (savedJobsUrl && savedJobsUrl!='undefined') ? savedJobsUrl : this.defaultJobsYamlUrl
+  }
 
+  getResultQualificationsUrl() {
+    const savedQualificationsUrl = this.getLocalStorageItem('qualificationsYamlUrl');
+    return savedQualificationsUrl && savedQualificationsUrl!='undefined' ? savedQualificationsUrl :  this.defaultQualificationsYamlUrl;
+  }
+
+  constructor(private http: HttpClient, private alertsService: AlertsService) {
+
+    const resultJobsUrl = this.getResultJobsUrl();
+    const resultQualificationsUrl = this.getResultQualificationsUrl();
+    
+    this.jobsYamlUrl$.subscribe(url => {
+      if (!url) { url = this.getResultJobsUrl() }
+
+      let sub = this.fetchYamlData(url).subscribe(dataObject => {
+        // we need to deep copy the object or else it's the same reference
+        this.jobsOriginalYAMLObj = JSON.parse(JSON.stringify(dataObject));
+        this.jobsContentSubject.next(dataObject)
+        sub.unsubscribe();
+      })
+    })
+
+    this.qualificationsYamlUrl$.subscribe(url => {
+      if (!url) { url = this.getResultQualificationsUrl() }
+
+      let sub = this.fetchYamlData(url).subscribe(dataObject => {
+        // we need to deep copy the object or else it's the same reference
+        this.qualificationsOriginalYAMLObj = JSON.parse(JSON.stringify(dataObject));
+        this.qualificationsContentSubject.next(dataObject)
+        sub.unsubscribe();
+      })
+    })
+    
 
     this.setJobsYamlUrl(resultJobsUrl);
-    this.fetchYamlData(resultJobsUrl).subscribe(dataObject => {
-
-      // we need to deep copy the object or else it's the same reference
-      this.jobsOriginalYAMLObj = JSON.parse(JSON.stringify(dataObject));
-
-      this.jobsContentSubject.next(dataObject)
-    });
-
     this.setQualificationsYamlUrl(resultQualificationsUrl);
-    this.fetchYamlData(resultQualificationsUrl).subscribe(dataObject => {
-      
-      // we need to deep copy the object or else it's the same reference
-      this.qualificationsOriginalYAMLObj = JSON.parse(JSON.stringify(dataObject));
-      this.qualificationsContentSubject.next(dataObject)
-    });
+
   }
 
   getJobsOriginalYAML() {
@@ -131,11 +149,14 @@ export class SharedService {
    * @returns Observable<any>
    */
   private fetchYamlData(url: string): Observable<any> {
-    // Ensure the URL points to the raw content
     const rawUrl = url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
     return this.http.get(rawUrl, { responseType: 'text' }).pipe(
-      // tap(response => console.log('Fetched response:', response)),
-      map(yamlText => yaml.load(yamlText))
+      map(yamlText => yaml.load(yamlText)),
+      catchError(error => {
+        console.error('Error fetching YAML data:', error);
+        this.alertsService.sendAlert({text: "Error fetching YAML data. Check URL in your settings.", cancelBtn: "Ok"})
+        return of({ list: []});
+      })
     );
   }
 
