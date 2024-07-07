@@ -26,7 +26,20 @@ jobs:
       - run: npm ci
         if: steps.cache.outputs.cache-hit != 'true'
 
-  
+  test:
+    runs-on: ubuntu-latest
+    needs: cache
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.3.0'
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.CACHE_NODE_MODULES_PATH }}
+          key: node-${{ hashFiles('**/package-lock.json')}}
+      - run: npm run test
 
   build:
     runs-on: ubuntu-latest
