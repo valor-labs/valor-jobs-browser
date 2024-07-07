@@ -18,7 +18,10 @@
         <mat-card-title>Changes</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        {{differences}}
+        jobs
+        <ul><li *ngFor="let difference of jobsDifferences">{{difference}}</li></ul>
+        qualifications
+        <ul><li *ngFor="let difference of qualificationsDifferences">{{difference}}</li></ul>
       </mat-card-content>
     </mat-card>
   </div>
