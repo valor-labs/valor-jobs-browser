@@ -23,8 +23,8 @@ export class ExportComponent {
   jobsDifferences: string[] = [];
   qualificationsDifferences: string[] = [];
 
-  jobsYaml: string = '';
-  qualificationsYaml: string = '';
+  jobsYamlText: string = '';
+  qualificationsYamlText: string = '';
 
   jobsUrl: string = "";
   qualificationsUrl: string = "";
@@ -41,10 +41,10 @@ export class ExportComponent {
     this.sharedService.jobsContent$
       .pipe(takeUntil(this.destroy$))
       .subscribe((receivedJobsObject:any) => {
-        this.jobsYaml = yaml.dump(receivedJobsObject);
+        this.jobsYamlText = yaml.dump(receivedJobsObject);
 
         this.jobsDifferences = receivedJobsObject ? 
-          this.changesService.compare("jobs", this.sharedService.getJobsOriginalYAML(), receivedJobsObject) :
+          this.changesService.compareYAMLObjects("jobs", this.sharedService.getJobsOriginalYAML(), receivedJobsObject) :
           [];
         
       });
@@ -52,24 +52,24 @@ export class ExportComponent {
     this.sharedService.qualificationsContent$
       .pipe(takeUntil(this.destroy$))
       .subscribe((receivedQualificationsObject:any) => {
-        this.qualificationsYaml = yaml.dump(receivedQualificationsObject);
+        this.qualificationsYamlText = yaml.dump(receivedQualificationsObject);
 
         this.qualificationsDifferences = receivedQualificationsObject ?
-          this.changesService.compare("qualifications", this.sharedService.getQualificationsOriginalYAML(), receivedQualificationsObject) :
+          this.changesService.compareYAMLObjects("qualifications", this.sharedService.getQualificationsOriginalYAML(), receivedQualificationsObject) :
           [];
 
       });
 
     this.sharedService.jobsYamlUrl$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.jobsUrl = data;
+      .subscribe((url: string) => {
+        this.jobsUrl = url;
       })
 
     this.sharedService.qualificationsYamlUrl$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.qualificationsUrl = data;
+      .subscribe((url: string) => {
+        this.qualificationsUrl = url;
       })
 
     this.sharedService.setChangesIndicator(false);

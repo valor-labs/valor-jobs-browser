@@ -34,9 +34,23 @@ export class SharedService {
     const resultJobsUrl = savedJobsUrl ?? this.defaultJobsYamlUrl;
     const resultQualificationsUrl = savedQualificationsUrl ?? this.defaultQualificationsYamlUrl;
 
+
     this.setJobsYamlUrl(resultJobsUrl);
+    this.fetchYamlData(resultJobsUrl).subscribe(dataObject => {
+
+      // we need to deep copy the object or else it's the same reference
+      this.jobsOriginalYAMLObj = JSON.parse(JSON.stringify(dataObject));
+
+      this.jobsContentSubject.next(dataObject)
+    });
+
     this.setQualificationsYamlUrl(resultQualificationsUrl);
-    
+    this.fetchYamlData(resultQualificationsUrl).subscribe(dataObject => {
+      
+      // we need to deep copy the object or else it's the same reference
+      this.qualificationsOriginalYAMLObj = JSON.parse(JSON.stringify(dataObject));
+      this.qualificationsContentSubject.next(dataObject)
+    });
   }
 
   getJobsOriginalYAML() {
@@ -67,10 +81,6 @@ export class SharedService {
   setJobsYamlUrl(url: string): void {
     this.setLocalStorageItem('jobsYamlUrl', url);
     this.jobsYamlUrlSubject.next(url);
-    this.fetchYamlData(url).subscribe(dataObject => {
-      this.jobsOriginalYAMLObj = dataObject;
-      this.jobsContentSubject.next(dataObject)
-    });
   }
 
   get qualificationsYamlUrl$(): Observable<string> {
@@ -80,10 +90,6 @@ export class SharedService {
   setQualificationsYamlUrl(url: string): void {
     this.setLocalStorageItem('qualificationsYamlUrl', url);
     this.qualificationsYamlUrlSubject.next(url);
-    this.fetchYamlData(url).subscribe(dataObject => {
-      this.qualificationsOriginalYAMLObj = dataObject;
-      this.qualificationsContentSubject.next(dataObject)
-    });
   }
 
   get jobsContent$(): Observable<any> {

@@ -44,7 +44,7 @@ export class ChangesService {
   // }
   
 
-  public compare(type: "jobs"|"qualifications", originalObject: object, changedObject: object): string[] {
+  public compareYAMLObjects(type: "jobs"|"qualifications", originalObject: object, changedObject: object): string[] {
     // const originalObject = this.loadYaml(originalYaml);
     // const changedObject = this.loadYaml(changedYaml);
 
@@ -204,7 +204,6 @@ export class ChangesService {
 
 
   private getDifferences(differentiator: Function, originalObject: any, changedObject: any, path = ''): IDifference[] {
-    
     return this.compareRootLists(differentiator, originalObject.list, changedObject.list);
   }
 
@@ -221,7 +220,7 @@ export class ChangesService {
     return (propertyString && propertyString.length>20) ? propertyString.substring(0, 20)+"..." : propertyString;
   }
 
-  private differenceRenderer(type: "jobs"|"qualifications", difference: IDifference): string {
+  public differenceRenderer(type: "jobs"|"qualifications", difference: IDifference): string {
     let itemName = "Unknown item";
     switch (type) {
       case "jobs": 
