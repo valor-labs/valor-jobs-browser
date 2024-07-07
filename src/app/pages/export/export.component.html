@@ -18,7 +18,50 @@
         <mat-card-title>Changes</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        {{differences}}
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Jobs </mat-panel-title>
+              <mat-panel-description> {{ jobsDifferences.length }} changes detected </mat-panel-description>
+            </mat-expansion-panel-header>
+            <ul>
+              <li *ngFor="let difference of jobsDifferences">
+                <mat-icon *ngIf="difference.type=='MainAdded'" class="added" aria-hidden="false" aria-label="Added" fontIcon="add_circle" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='MainDeleted'" class="removed" aria-hidden="false" aria-label="Removed" fontIcon="cancel" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='MainChanged'" class="changed" aria-hidden="false" aria-label="Removed" fontIcon="edit_note" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='ElementAdded'" class="added" aria-hidden="false" aria-label="Removed" fontIcon="playlist_add" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='ElementDeleted'" class="removed" aria-hidden="false" aria-label="Removed" fontIcon="playlist_remove" inline=true></mat-icon>
+                <span>
+                  {{differenceRenderer("jobs", difference)}}
+                </span>
+              </li>
+            </ul>
+
+          </mat-expansion-panel>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Qualifications </mat-panel-title>
+              <mat-panel-description> {{ qualificationsDifferences.length }} changes detected </mat-panel-description>
+            </mat-expansion-panel-header>
+            
+            <ul>
+              <li *ngFor="let difference of qualificationsDifferences">
+                <mat-icon *ngIf="difference.type=='MainAdded'" class="added" aria-hidden="false" aria-label="Added" fontIcon="add_circle" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='MainDeleted'" class="removed" aria-hidden="false" aria-label="Removed" fontIcon="cancel" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='MainChanged'" class="changed" aria-hidden="false" aria-label="Removed" fontIcon="edit_note" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='ElementAdded'" class="added" aria-hidden="false" aria-label="Removed" fontIcon="playlist_add" inline=true></mat-icon>
+                <mat-icon *ngIf="difference.type=='ElementDeleted'" class="removed" aria-hidden="false" aria-label="Removed" fontIcon="playlist_remove" inline=true></mat-icon>
+    
+                <span>
+                  {{differenceRenderer("qualifications", difference)}}
+                </span>
+              </li>
+            </ul>
+
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- <div *ngIf="!jobsDifferences.length && !qualificationsDifferences.length">No changes detected. Turn Edit Mode on and change either Jobs or Qualifications.</div> -->
       </mat-card-content>
     </mat-card>
   </div>
@@ -29,13 +72,13 @@
     </mat-card-header>
     <mat-card-content>
       <div class="buttons_bar">
-        <button mat-raised-button [cdkCopyToClipboard]="jobsYaml">Copy YAML</button>
+        <button mat-raised-button [cdkCopyToClipboard]="jobsYamlText">Copy YAML</button>
         <button mat-raised-button (click)="createPL(jobsUrl)">Create a Pull Request</button>
       </div>
 
       <mat-form-field class="example-full-width">
         <mat-label>Leave a comment</mat-label>
-        <textarea matInput placeholder=""  [(ngModel)]="jobsYaml"></textarea>
+        <textarea matInput placeholder=""  [(ngModel)]="jobsYamlText"></textarea>
       </mat-form-field>
     </mat-card-content>
   </mat-card>
@@ -46,13 +89,13 @@
     </mat-card-header>
     <mat-card-content>
       <div class="buttons_bar">
-        <button mat-raised-button [cdkCopyToClipboard]="qualificationsYaml">Copy YAML</button>
+        <button mat-raised-button [cdkCopyToClipboard]="qualificationsYamlText">Copy YAML</button>
         <a mat-raised-button [href]="qualificationsUrl" target="_blank">Create a Pull Request</a>
       </div>
 
       <mat-form-field class="example-full-width">
         <mat-label>Leave a comment</mat-label>
-        <textarea matInput placeholder=""  [(ngModel)]="qualificationsYaml"></textarea>
+        <textarea matInput placeholder=""  [(ngModel)]="qualificationsYamlText"></textarea>
       </mat-form-field>
     </mat-card-content>
   </mat-card>

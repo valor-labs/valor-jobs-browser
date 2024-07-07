@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import * as jsYaml from 'js-yaml';
+// import * as jsYaml from 'js-yaml';
 
 
-enum DifferenceType {
+export enum DifferenceType {
   MainDeleted = "MainDeleted",
   MainAdded = "MainAdded",
   MainChanged = "MainChanged",
@@ -10,7 +10,7 @@ enum DifferenceType {
   ElementAdded = "ElementAdded",
 }
 
-interface IDifference {
+export interface IDifference {
   type: DifferenceType
   item?: any
   path?: string
@@ -22,8 +22,8 @@ interface IDifference {
 const qObjDifferentiator = function (q1: any, q2: any) {
   return q1.title === q2.title && q1.level == q2.level;
 }
-const jObjDifferentiator = function (q1: any, q2: any) {
-  return q1.title === q2.title && q1.level == q2.level;
+const jObjDifferentiator = function (j1: any, j2: any) {
+  return j1.title === j2.title && j1.seniority === j2.seniority;
 }
 
 
@@ -34,15 +34,35 @@ export class ChangesService {
 
   constructor() { }
 
-  private loadYaml(yamlString: string): any {
-    try {
-      return jsYaml.load(yamlString);
-    } catch (e) {
-      console.error('Error parsing YAML string:', e);
-      return null;
-    }
-  }
+  // private loadYaml(yamlString: string): any {
+  //   try {
+  //     return jsYaml.load(yamlString);
+  //   } catch (e) {
+  //     console.error('Error parsing YAML string:', e);
+  //     return null;
+  //   }
+  // }
   
+
+  public compareYAMLObjects(type: "jobs"|"qualifications", originalObject: any, changedObject: any): IDifference[] {
+    // const originalObject = this.loadYaml(originalYaml);
+    // const changedObject = this.loadYaml(changedYaml);
+
+    if (!originalObject) {
+      throw new Error("originalObject not specified")
+    }
+    if (!changedObject) {
+      throw new Error("changedObject not specified")
+    }
+
+    const differentiator: Function = 
+      type === "jobs" ?
+        jObjDifferentiator :
+        qObjDifferentiator;
+
+    return this.compareRootLists(differentiator, originalObject.list, changedObject.list);
+  }
+
 
   private compareRootLists(differentiator: Function, listOriginal: Array<Object>, listNew: Array<Object>) : IDifference[] {
     let differences: IDifference[] = [];
@@ -90,6 +110,8 @@ export class ChangesService {
 
     Object.keys(newItem).forEach((key: string) => {
       if (Array.isArray(newItem[key as keyof object])) {
+
+        // example: knowledge where it's an array of strings or materials_and_topics where each element is an object
         let diffs: IDifference[] = this.compare2ndLevelLists(origItem[key as keyof object], newItem[key as keyof object]);
         diffs.forEach(diff => {
           diff.item = newItem
@@ -98,9 +120,15 @@ export class ChangesService {
         differences.push(...diffs);
 
       } else if (typeof newItem[key as keyof object] == "object") {
-        console.warn("Object comparison not yet implemented")
+
+        if (newItem[key as keyof object]) {
+          console.log(key, newItem[key as keyof object]);
+          throw new Error("Right now there are no such cases when the root property is an object. Typically, it's eaither string or array.")
+        }
 
       } else if (origItem[key as keyof object] != newItem[key as keyof object]) {
+        // examples: level, title, category, status or any other simple value
+
         differences.push({
           type: DifferenceType.MainChanged, 
           item: newItem,
@@ -119,9 +147,6 @@ export class ChangesService {
   };
 
 
-  private find2ndLevelObjects(obj1: any, arr: any[]) {
-    console.warn("Not yet implemented");
-  }
 
   private compare2ndLevelLists(originalArray: any[], newArray: any[]) {
     const arrDiffs: IDifference[] = [];
@@ -136,19 +161,39 @@ export class ChangesService {
           );
         }
       } else {
-        this.find2ndLevelObjects(originalElement, newArray)
+        const foundEl = newArray.find(elementInNewArray => {
+          return JSON.stringify(elementInNewArray) === JSON.stringify(originalElement);
+        })
+
+        if (!foundEl) {
+          arrDiffs.push(
+            { type: DifferenceType.ElementDeleted, value: originalElement.title || (originalElement as string) }
+          )
+        }
+
+        // arrDiffs.push(...this.find2ndLevelObjects(originalElement, newArray));
       }
     });
 
-    newArray.forEach((newElement: any) => {
-      if (typeof newElement === 'string' || typeof newElement === 'number') {
-        if (!originalArray.includes(newElement)) {
+    newArray.forEach((elementFromNewArr: any) => {
+      if (typeof elementFromNewArr === 'string' || typeof elementFromNewArr === 'number') {
+        if (!originalArray.includes(elementFromNewArr)) {
           arrDiffs.push(
-            { type: DifferenceType.ElementAdded, value: newElement as string }
+            { type: DifferenceType.ElementAdded, value: elementFromNewArr as string }
           );
         }
       } else {
-        this.find2ndLevelObjects(newElement, originalArray)
+        const foundEl = originalArray.find(elementInOrigArray => {
+          return JSON.stringify(elementInOrigArray) === JSON.stringify(elementFromNewArr);
+        })
+
+        if (!foundEl) {
+          arrDiffs.push(
+            { type: DifferenceType.ElementAdded, value: elementFromNewArr.title || (elementFromNewArr as string) }
+          )
+        }
+
+        // arrDiffs.push(...this.find2ndLevelObjects(newElement, originalArray));
       }
     });
 
@@ -157,39 +202,10 @@ export class ChangesService {
 
 
 
-  private getDifferences(differentiator: Function, obj1: any, obj2: any, path = ''): IDifference[] {
-    
-    return this.compareRootLists(differentiator, obj1.list, obj2.list);
-  }
-
-  public compareYaml(yamlString1: string, yamlString2: string): string[] {
-    const yaml1 = this.loadYaml(yamlString1);
-    const yaml2 = this.loadYaml(yamlString2);
-
-    if (!yaml1 || !yaml2) {
-      return ['Error loading YAML data'];
-    }
-
-    const differences = this.getDifferences(qObjDifferentiator, yaml1, yaml2);
-    return this.differenceToText(differences);
-  }
+  // private getDifferences(differentiator: Function, originalObject: any, changedObject: any, path = ''): IDifference[] {
+  //   return 
+  // }
 
 
 
-  public differenceToText(list: IDifference[]): string[] {
-    return list.map((difference: IDifference) => {
-      switch (difference.type) {
-        case DifferenceType.MainAdded: {
-          return `Added item "${difference.item?.category} | ${difference.item?.title} | ${difference.item?.level}"`
-        }
-        case DifferenceType.ElementAdded: {
-          return `Update: ${difference.property} "${difference.value}" added to "${difference.item?.category} | ${difference.item?.title} | ${difference.item?.level}"`
-        }
-        default: {
-          console.error(`${difference.type} - Not implemented`)
-          return "Some difference";
-        }
-      }
-    })
-  }
 }
